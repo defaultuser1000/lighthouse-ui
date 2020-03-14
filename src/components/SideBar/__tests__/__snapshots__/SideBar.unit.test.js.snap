@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders HeaderNav 1`] = `
+<Menu
+  borderless={true}
+  className="side-nav"
+  fixed="left"
+  stackable={true}
+  vertical={true}
+>
+  <SideBarItem
+    highlight={true}
+    icon="home"
+    label="Home"
+  />
+  <SideBarItem
+    icon="film"
+    label="Order"
+  />
+  <SideBarItem
+    icon="user outline"
+    label="Users"
+  />
+  <SideBarItem
+    icon="calendar outline"
+    label="Working Schedule"
+  />
+  <Divider />
+  <SideBarHeader
+    title="System"
+  />
+  <SideBarItem
+    icon="settings"
+    label="Settings"
+  />
+  <SideBarFooter />
+</Menu>
+`;

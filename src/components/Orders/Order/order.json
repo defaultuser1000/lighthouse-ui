@@ -1,0 +1,23 @@
+{
+  "order": {
+    "orderId": "1",
+    "orderNumber": "1001",
+    "orderOwner": {
+      "id": 1,
+      "firstname": "Marina",
+      "lastname": "Bogdanova"
+    },
+    "orderCreator": {
+      "id": 1,
+      "firstname": "Marina",
+      "lastname": "Bogdanova"
+    },
+    "scanner": "Noritsu HS-1800",
+    "skinTones": "Neutral",
+    "contrast": "Neutral",
+    "bwContrast": "Neutral",
+    "express": "2-4 days +100%",
+    "special": "Проверка раз 2\nПеренос строки",
+    "orderForm": "url form"
+  }
+}

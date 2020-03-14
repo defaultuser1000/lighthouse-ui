@@ -1,0 +1,12 @@
+@import "../../styles/shared";
+
+.app-layout {
+
+  overflow: hidden;
+
+  & > *:not(:first-child) {
+    margin-top: $header-nav-height + 10px;
+    margin-bottom: 10px;
+  }
+
+}

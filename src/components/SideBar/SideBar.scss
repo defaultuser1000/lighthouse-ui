@@ -1,0 +1,16 @@
+@import '../../styles/shared.scss';
+$sidebar-hover-color: #ebebeb;
+.ui.menu.fixed.side-nav {
+  background-color: #f0f0f0;
+  margin-top: $header-nav-height;
+  padding-bottom: $header-nav-height;
+  overflow-y: auto;
+
+  .sidebar-item:hover {
+    background: $sidebar-hover-color;
+  }
+}
+
+.side-nav.ui.vertical.menu {
+  width: $sidebar-left-width;
+}

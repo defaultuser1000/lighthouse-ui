@@ -1,0 +1,74 @@
+@import "../../styles/shared";
+
+* {
+  text-decoration: none !important;
+  outline: none !important;
+}
+
+.orders-table {
+  margin-left: $sidebar-left-width + 1rem;
+  margin-right: 1rem;
+}
+
+.status {
+  display: inline-block;
+  padding: .25em .4em;
+  font-size: 85%;
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25rem;
+}
+
+.status-pill {
+  padding-right: .6em;
+  padding-left: .6em;
+  border-radius: 10rem;
+}
+
+.status-new {
+  color: #fff;
+  background-color: #007bff;
+}
+
+.status-cancelled {
+  color: #fff;
+  background-color: #dc3545;
+}
+
+.status-confirmed {
+  color: #fff;
+  background-color: #17a2b8;
+}
+
+.status-sent {
+  color: #fff;
+  background-color: #fff900;
+}
+
+.status-arrived {
+  color: #fff;
+  background-color: #007bff;
+}
+
+.status-developed {
+  color: #fff;
+  background-color: #ffc107;
+}
+
+.status-scanned {
+  color: #fff;
+  background-color: #6100ff;
+}
+
+.status-processed {
+  color: #fff;
+  background-color: #a6ff00;
+}
+
+.status-ready {
+  color: #fff;
+  background-color: #28a745;
+}

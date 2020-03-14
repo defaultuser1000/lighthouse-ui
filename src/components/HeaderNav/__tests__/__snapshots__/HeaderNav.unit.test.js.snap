@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders HeaderNav 1`] = `
+<Menu
+  borderless={true}
+  className="top-menu"
+  fixed="top"
+>
+  <MenuItem
+    className="logo"
+    header={true}
+  >
+    <ItemMeta
+      as="div"
+    >
+      <Image
+        as="a"
+        href="/"
+        size="tiny"
+        src="logo.png"
+        ui={true}
+      />
+    </ItemMeta>
+    <Header
+      as="h1"
+      content="Lighthouse Film Lab"
+    />
+  </MenuItem>
+  <MenuMenu
+    className="nav-container"
+  >
+    <MenuItem
+      className="search-input"
+    >
+      <Form
+        as="form"
+      >
+        <FormField>
+          <Input
+            action="Go"
+            placeholder="Search"
+            size="small"
+            type="text"
+          />
+        </FormField>
+      </Form>
+    </MenuItem>
+  </MenuMenu>
+  <MenuMenu
+    position="right"
+  >
+    <MenuItem>
+      <a
+        href="/logout"
+      >
+        <Button
+          as="button"
+          className="header-logout-button"
+          content="Logout"
+          name="logout"
+          size="small"
+        />
+      </a>
+    </MenuItem>
+  </MenuMenu>
+</Menu>
+`;

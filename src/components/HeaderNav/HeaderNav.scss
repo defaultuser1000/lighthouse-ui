@@ -1,0 +1,38 @@
+@import '../../styles/shared.scss';
+.ui.menu.top-menu {
+  border: none;
+  background-color: #DADADA;
+  .logo {
+    margin-left: 20px;
+    width: $logo-title-width;
+
+    a {
+      background-color: #FFFFFF;
+      border-radius: 40px;
+      border: 0px;
+    }
+
+    h1 {
+      color: #555555;
+      margin-left: 10px;
+      margin-top: -5px;
+    }
+  }
+  .nav-container {
+    flex-grow: 1;
+    padding: 0;
+
+    .search-input {
+      padding-left: 0;
+      width: 50%;
+
+      form {
+        width: 100%;
+      }
+    }
+  }
+  .header-logout-button {
+    background-color: #D84F47;
+    color: #FFFFFF;
+  }
+}
