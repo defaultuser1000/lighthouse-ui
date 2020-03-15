@@ -1,12 +1,10 @@
 import React from 'react';
 import './Orders.scss';
 import '../../styles/shared.scss'
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import {ORDERS_FETCH_LINK} from "../../config/Constants";
 import MaterialTable from "material-table";
-import {Button as SemButton} from "semantic-ui-react";
-
-import {Button, Col, Container, Modal, Row} from "react-bootstrap";
+import {Button as SemButton, Label} from "semantic-ui-react";
 
 export default class Orders extends React.Component {
 
@@ -15,6 +13,19 @@ export default class Orders extends React.Component {
         isLoading: true,
         tableHeight: window.innerHeight - 247
     };
+
+    statusColor = new Map([
+            ['new', 'blue'],
+            ['cancelled', 'red'],
+            ['confirmed', 'teal'],
+            ['sent', 'purple'],
+            ['arrived', 'yellow'],
+            ['developed', 'olive'],
+            ['scanned', 'orange'],
+            ['processed', 'purple'],
+            ['ready', 'green']
+        ]
+    );
 
     modalShow = false;
 
@@ -66,12 +77,16 @@ export default class Orders extends React.Component {
                             {
                                 title: 'Status',
                                 field: 'orderStatus',
-                                render: rowData => (
-                                    <span
-                                        className={['status', 'status-pill', 'status-' + rowData.orderStatus.toLowerCase()].join(' ')}>
-                                    {rowData.orderStatus}
-                                </span>
-                                )
+                                render: rowData =>
+                                    (
+                                        <Label
+                                            color={this.statusColor.get(rowData.orderStatus.toLowerCase())}
+                                            key={this.statusColor.get(rowData.orderStatus.toLowerCase())}
+                                        >
+                                            {rowData.orderStatus}
+                                        </Label>
+                                    )
+
                             },
                             {title: 'Created At', field: 'creationDate', type: 'date'},
                             {title: 'Modified At', field: 'modificationDate', type: 'date', defaultSort: 'desc'}
@@ -119,42 +134,6 @@ export default class Orders extends React.Component {
                         }}
                     />
                 </div>
-
-                {/*Modal form for new order*/}
-                <Modal show={this.modalShow} aria-labelledby="contained-modal-title-vcenter">
-                    <Modal.Header closeButton>
-                        <Modal.Title id="contained-modal-title-vcenter">
-                            Using Grid in Modal
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Container>
-                            <Row className="show-grid">
-                                <Col xs={12} md={8}>
-                                    <code>.col-xs-12 .col-md-8</code>
-                                </Col>
-                                <Col xs={6} md={4}>
-                                    <code>.col-xs-6 .col-md-4</code>
-                                </Col>
-                            </Row>
-
-                            <Row className="show-grid">
-                                <Col xs={6} md={4}>
-                                    <code>.col-xs-6 .col-md-4</code>
-                                </Col>
-                                <Col xs={6} md={4}>
-                                    <code>.col-xs-6 .col-md-4</code>
-                                </Col>
-                                <Col xs={6} md={4}>
-                                    <code>.col-xs-6 .col-md-4</code>
-                                </Col>
-                            </Row>
-                        </Container>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={this.modalShow = false}>Close</Button>
-                    </Modal.Footer>
-                </Modal>
             </>
         );
     }

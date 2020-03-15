@@ -4,3 +4,9 @@
   margin-left: $sidebar-left-width + 1rem;
   margin-right: 1rem;
 }
+
+.myloader {
+  margin-left: $sidebar-left-width;
+  margin-top: $header-nav-height;
+  height: 100%;
+}

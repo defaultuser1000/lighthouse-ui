@@ -1,16 +1,17 @@
 import React from 'react';
-import ReactLoading from 'react-loading';
 import './Order.scss'
-import 'bootstrap/dist/css/bootstrap.css';
 import {ORDER_1_FETCH_LINK} from "../../../config/Constants";
-import {Form} from "react-bootstrap";
+import ContentLoader from "react-content-loader"
+import {Breadcrumb, Divider, Form, Input, TextArea} from "semantic-ui-react";
 
 export default class Order extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             order: {},
+            orderOwner: {},
+            orderCreator: {},
             isLoading: true
         };
     }
@@ -19,33 +20,102 @@ export default class Order extends React.Component {
         fetch(ORDER_1_FETCH_LINK)
             .then(results => results.json())
             .then(data => {
-                this.setState({order: data.order, isLoading: false});
+                this.setState({
+                    order: data.order,
+                    orderOwner: data.order.orderOwner,
+                    orderCreator: data.order.orderCreator,
+                    isLoading: false
+                });
             }).catch(err => console.log(err))
     }
 
     render() {
-        return(
+        return (
             <div className={'order d-flex justify-content-center align-items-center'}>
-                {this.state.isLoading ?
-                    <ReactLoading type={"spin"} color={"#D84F47"} /> :
-                    <OrderForm>{this.state.order}</OrderForm>
-                }
+                <React.Fragment>
+                    <React.Fragment>
+                        <Breadcrumb size='huge'>
+                            <Breadcrumb.Section link href='/'>Home</Breadcrumb.Section>
+                            <Breadcrumb.Divider icon='right chevron'/>
+                            <Breadcrumb.Section link href='/orders'>Orders</Breadcrumb.Section>
+                            <Breadcrumb.Divider icon='right chevron'/>
+                            <Breadcrumb.Section active>Order #{
+                                this.state.isLoading ?
+                                    <ContentLoader
+                                        speed={1.5}
+                                        width={90}
+                                        height={20}
+                                        viewBox="0 0 90 20"
+                                        backgroundColor="#f9f9f9"
+                                        foregroundColor="#dbdbdb"
+                                    >
+                                        <rect x="5" y="5" rx="3" ry="3" width="90" height="20"/>
+                                    </ContentLoader> :
+                                    this.state.order.orderNumber
+                            }</Breadcrumb.Section>
+                        </Breadcrumb>
+                    </React.Fragment>
+                    <Divider/>
+                    <React.Fragment>
+                        <Form loading={this.state.isLoading}
+                              size={'large'}>
+                            <Form.Group widths={"two"}>
+                                <Form.Field
+                                    control={Input}
+                                    label='Order Owner'
+                                    value={[this.state.orderOwner.firstname, this.state.orderOwner.lastname].join(' ')}
+                                    editable={false}
+                                />
+                                <Form.Field
+                                    control={Input}
+                                    label='Order Creator'
+                                    value={[this.state.orderCreator.firstname, this.state.orderCreator.lastname].join(' ')}
+                                    editable={false}
+                                />
+                            </Form.Group>
+                            <Form.Field
+                                control={Input}
+                                label='Scanner'
+                                value={this.state.order.scanner}
+                            />
+                            <Form.Group widths={"two"}>
+                                <Form.Field
+                                    control={Input}
+                                    label='Skin Tones'
+                                    value={this.state.order.skinTones}
+                                    editable={false}
+                                />
+                                <Form.Field
+                                    control={Input}
+                                    label='Contrast'
+                                    value={this.state.order.contrast}
+                                    editable={false}
+                                />
+                            </Form.Group>
+                            <Form.Group widths={"two"}>
+                                <Form.Field
+                                    control={Input}
+                                    label='B&W Contrast'
+                                    value={this.state.order.bwContrast}
+                                    editable={false}
+                                />
+                                <Form.Field
+                                    control={Input}
+                                    label='Express'
+                                    value={this.state.order.express}
+                                    editable={false}
+                                />
+                            </Form.Group>
+                            <Form.Field
+                                control={TextArea}
+                                label='Special'
+                                value={this.state.order.special}
+                                editable={false}
+                            />
+                        </Form>
+                    </React.Fragment>
+                </React.Fragment>
             </div>
         );
     }
 }
-
-const OrderForm = (order) => (
-    <Form >
-        <Form.Group controlId="test">
-            <Form.Label >Order Owner</Form.Label>
-            <Form.Control
-                type="text"
-                value={[order.children.orderOwner.firstname, order.children.orderOwner.lastname].join(" ")}
-                readOnly
-                size='lg'
-            />
-            {/*{JSON.stringify(order.children)}*/}
-        </Form.Group>
-    </Form>
-);

@@ -3,6 +3,7 @@
 .app-layout {
 
   overflow: hidden;
+  background-color: #fff;
 
   & > *:not(:first-child) {
     margin-top: $header-nav-height + 10px;
