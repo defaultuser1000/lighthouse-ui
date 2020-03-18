@@ -6,6 +6,8 @@ import {Breadcrumb, Divider, Form, Input, TextArea} from "semantic-ui-react";
 
 export default class Order extends React.Component {
 
+    error = {};
+
     constructor(props) {
         super(props);
         this.state = {
@@ -26,7 +28,10 @@ export default class Order extends React.Component {
                     orderCreator: data.order.orderCreator,
                     isLoading: false
                 });
-            }).catch(err => console.log(err))
+            }).catch(err => {
+                console.log(err);
+                this.error = { message: err };
+            })
     }
 
     render() {
@@ -35,21 +40,21 @@ export default class Order extends React.Component {
                 <React.Fragment>
                     <React.Fragment>
                         <Breadcrumb size='huge'>
-                            <Breadcrumb.Section link href='/'>Home</Breadcrumb.Section>
+                            <Breadcrumb.Section href='/'>Home</Breadcrumb.Section>
                             <Breadcrumb.Divider icon='right chevron'/>
-                            <Breadcrumb.Section link href='/orders'>Orders</Breadcrumb.Section>
+                            <Breadcrumb.Section href='/orders'>Orders</Breadcrumb.Section>
                             <Breadcrumb.Divider icon='right chevron'/>
                             <Breadcrumb.Section active>Order #{
                                 this.state.isLoading ?
                                     <ContentLoader
-                                        speed={1.5}
+                                        speed={2}
                                         width={90}
                                         height={20}
                                         viewBox="0 0 90 20"
                                         backgroundColor="#f9f9f9"
-                                        foregroundColor="#dbdbdb"
+                                        foregroundColor="#d8d8d8"
                                     >
-                                        <rect x="5" y="5" rx="3" ry="3" width="90" height="20"/>
+                                        <rect x="5" y="0" rx="10" ry="10" width="80" height="20" />
                                     </ContentLoader> :
                                     this.state.order.orderNumber
                             }</Breadcrumb.Section>
@@ -64,32 +69,33 @@ export default class Order extends React.Component {
                                     control={Input}
                                     label='Order Owner'
                                     value={[this.state.orderOwner.firstname, this.state.orderOwner.lastname].join(' ')}
-                                    editable={false}
+                                    editable='false'
                                 />
                                 <Form.Field
                                     control={Input}
                                     label='Order Creator'
                                     value={[this.state.orderCreator.firstname, this.state.orderCreator.lastname].join(' ')}
-                                    editable={false}
+                                    editable='false'
                                 />
                             </Form.Group>
                             <Form.Field
                                 control={Input}
                                 label='Scanner'
                                 value={this.state.order.scanner}
+                                editable='false'
                             />
                             <Form.Group widths={"two"}>
                                 <Form.Field
                                     control={Input}
                                     label='Skin Tones'
                                     value={this.state.order.skinTones}
-                                    editable={false}
+                                    editable='false'
                                 />
                                 <Form.Field
                                     control={Input}
                                     label='Contrast'
                                     value={this.state.order.contrast}
-                                    editable={false}
+                                    editable='false'
                                 />
                             </Form.Group>
                             <Form.Group widths={"two"}>
@@ -97,20 +103,20 @@ export default class Order extends React.Component {
                                     control={Input}
                                     label='B&W Contrast'
                                     value={this.state.order.bwContrast}
-                                    editable={false}
+                                    editable='false'
                                 />
                                 <Form.Field
                                     control={Input}
                                     label='Express'
                                     value={this.state.order.express}
-                                    editable={false}
+                                    editable='false'
                                 />
                             </Form.Group>
                             <Form.Field
                                 control={TextArea}
                                 label='Special'
                                 value={this.state.order.special}
-                                editable={false}
+                                editable='false'
                             />
                         </Form>
                     </React.Fragment>
