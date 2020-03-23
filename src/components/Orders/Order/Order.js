@@ -2,11 +2,10 @@ import React from 'react';
 import './Order.scss'
 import {ORDER_1_FETCH_LINK} from "../../../config/Constants";
 import ContentLoader from "react-content-loader"
-import {Breadcrumb, Divider, Form, Input, TextArea} from "semantic-ui-react";
+import {Segment, Breadcrumb, Divider, Form, Input, TextArea, ButtonGroup, Button} from "semantic-ui-react";
+import {useAlert} from "react-alert";
 
 export default class Order extends React.Component {
-
-    error = {};
 
     constructor(props) {
         super(props);
@@ -14,7 +13,8 @@ export default class Order extends React.Component {
             order: {},
             orderOwner: {},
             orderCreator: {},
-            isLoading: true
+            isLoading: true,
+            error: {}
         };
     }
 
@@ -30,14 +30,17 @@ export default class Order extends React.Component {
                 });
             }).catch(err => {
                 console.log(err);
-                this.error = { message: err };
+                this.setState({
+                    error: { message: err },
+                    isLoading: false
+                });
             })
     }
 
     render() {
         return (
             <div className={'order d-flex justify-content-center align-items-center'}>
-                <React.Fragment>
+                <Segment>
                     <React.Fragment>
                         <Breadcrumb size='huge'>
                             <Breadcrumb.Section href='/'>Home</Breadcrumb.Section>
@@ -60,7 +63,15 @@ export default class Order extends React.Component {
                             }</Breadcrumb.Section>
                         </Breadcrumb>
                     </React.Fragment>
+                    <React.Fragment>
+                        <ButtonGroup>
+                            <Button loading={this.state.isLoading} icon='refresh' onClick={() => {window.location.reload()}}></Button>
+                        </ButtonGroup>
+                    </React.Fragment>
                     <Divider/>
+                    {/*<button onClick={() => {*/}
+                    {/*    useAlert().show('Oh look, an alert!');*/}
+                    {/*}}>Show</button>*/}
                     <React.Fragment>
                         <Form loading={this.state.isLoading}
                               size={'large'}>
@@ -120,7 +131,7 @@ export default class Order extends React.Component {
                             />
                         </Form>
                     </React.Fragment>
-                </React.Fragment>
+                </Segment>
             </div>
         );
     }

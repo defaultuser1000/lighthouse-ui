@@ -2,7 +2,7 @@ import React from 'react';
 import './Orders.scss';
 import '../../styles/shared.scss'
 // import 'bootstrap/dist/css/bootstrap.min.css';
-import {ORDERS_FETCH_LINK} from "../../config/Constants";
+import {config} from "../../config/Constants";
 import MaterialTable from "material-table";
 import {Button as SemButton, Label} from "semantic-ui-react";
 
@@ -38,12 +38,17 @@ export default class Orders extends React.Component {
     //     this.props.onViewItem(this.props.endpoint, rowData.id)
     // }
 
-    componentDidMount() {
-        fetch(ORDERS_FETCH_LINK)
+    async componentDidMount() {
+        console.log(config.url.API_URL);
+        await fetch(config.url.API_URL + "/orders")
             .then(results => results.json())
             .then(data => {
-                this.setState({orders: data.orders, isLoading: false});
-            }).catch(err => console.log(err))
+                console.log(JSON.stringify(data));
+                this.setState({orders: data, isLoading: false});
+            }).catch(err => {
+                console.log(err);
+                this.setState({isLoading: false})
+            })
     }
 
     render() {
@@ -61,7 +66,7 @@ export default class Orders extends React.Component {
                                 align: 'left',
                                 field: 'orderNumber',
                                 render: rowData => (
-                                    <th scope="row"><a href={"/orders/order/" + rowData.id}>{rowData.orderNumber}</a>
+                                    <th scope="row"><a href={"/orders/order/" + rowData.orderId}>{rowData.orderNumber}</a>
                                     </th>
                                 )
                             },
@@ -71,7 +76,7 @@ export default class Orders extends React.Component {
                                 align: 'left',
                                 render: rowData =>
                                     (
-                                        [rowData.orderOwner.firstname, rowData.orderOwner.lastname].join(' ')
+                                        [rowData.orderOwner.firstName, rowData.orderOwner.lastName].join(' ')
                                     )
                             },
                             {
@@ -80,8 +85,8 @@ export default class Orders extends React.Component {
                                 render: rowData =>
                                     (
                                         <Label
-                                            color={this.statusColor.get(rowData.orderStatus.toLowerCase())}
-                                            key={this.statusColor.get(rowData.orderStatus.toLowerCase())}
+                                            color={rowData.orderStatus ? this.statusColor.get(rowData.orderStatus.toLowerCase()) : null}
+                                            key={rowData.orderStatus ? this.statusColor.get(rowData.orderStatus.toLowerCase()) : null}
                                         >
                                             {rowData.orderStatus}
                                         </Label>
