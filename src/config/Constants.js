@@ -25,4 +25,7 @@ const prod = {
         API_URL: "https://lighthouse-back-production.herokuapp.com"
     }
 };
-export const config = process.env.NODE_ENV === "production" ? prod : local;
+export const config = process.env.STAND === "production" ? prod
+    : process.env.STAND === "development" ? dev
+        : process.env.STAND === "staging" ? staging
+            : local;
