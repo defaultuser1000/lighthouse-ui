@@ -28,4 +28,4 @@ const prod = {
 export const config = process.env.STAND === "production" ? prod
     : process.env.STAND === "development" ? dev
         : process.env.STAND === "staging" ? staging
-            : local;
+            : dev;
