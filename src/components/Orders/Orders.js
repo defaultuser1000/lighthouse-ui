@@ -43,7 +43,7 @@ export default class Orders extends React.Component {
         await fetch(config.url.API_URL + "/orders")
             .then(results => results.json())
             .then(data => {
-                console.log('Stand: ' + process.env.STAND);
+                console.log('Stand: ' + process.env);
                 console.log(JSON.stringify(data));
                 this.setState({orders: data, isLoading: false});
             }).catch(err => {
