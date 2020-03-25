@@ -43,7 +43,12 @@ export default class Orders extends React.Component {
         await fetch(config.url.API_URL + "/orders")
             .then(results => results.json())
             .then(data => {
-                console.log('Stand: ' + JSON.stringify(process.env));
+                const aws = require('aws-sdk');
+
+                let s3 = new aws.S3({
+                    stand: process.env.STAND
+                });
+                console.log('Stand: ' + JSON.stringify(s3));
                 console.log(JSON.stringify(data));
                 this.setState({orders: data, isLoading: false});
             }).catch(err => {
