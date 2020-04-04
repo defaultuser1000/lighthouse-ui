@@ -39,6 +39,7 @@ export default class Orders extends React.Component {
     // }
 
     async componentDidMount() {
+        require('dotenv').config();
         console.log(config.url.API_URL);
         await fetch(config.url.API_URL + "/orders")
             .then(results => results.json())
