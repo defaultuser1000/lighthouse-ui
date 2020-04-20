@@ -5,7 +5,7 @@ import HeaderNav from "../HeaderNav/HeaderNav";
 export function AppLayout(props) {
     return(
         <div className='app-layout'>
-            <HeaderNav/>
+            <HeaderNav history={props.history}/>
             {props.children}
         </div>
     );

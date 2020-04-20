@@ -5,7 +5,7 @@ import logo from '../../assets/images/logo.png';
 import {APP_NAME} from "../../config/Constants";
 import ProfileDropdown from "./ProfileDropdown/ProfileDropdown";
 
-export default function HeaderNav() {
+export default function HeaderNav(props) {
 
     return (
         <Menu borderless className='top-menu' fixed='top'>

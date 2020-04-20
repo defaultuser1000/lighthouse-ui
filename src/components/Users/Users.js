@@ -1,20 +1,19 @@
 import React from 'react';
 import './Users.scss';
 import MaterialTable from 'material-table';
-import {USERS_FETCH_LINK} from "../../config/Constants";
 import {Link} from "react-router-dom";
-import faker from "faker";
 import {Image} from "semantic-ui-react";
+import defaultAvatar from '../../assets/images/default_avatar.png';
 
 export default class Users extends React.Component {
 
     state = {users: [], isLoading: true, tableHeight: window.innerHeight - 247};
 
     componentDidMount() {
-        fetch(USERS_FETCH_LINK)
+        fetch('/users')
             .then(results => results.json())
             .then(data => {
-                this.setState({users: data.users, isLoading: false});
+                this.setState({users: data, isLoading: false});
             }).catch(err => console.log(err))
     }
 
@@ -26,21 +25,20 @@ export default class Users extends React.Component {
                     title="Users"
                     columns={[
                         {
+                            width: 5,
                             title: 'Avatar',
                             field: 'imageUrl',
                             render: rowData => (
-                                <Link to={'/users/' + rowData.id}>
-                                    <Image avatar size='mini' src={faker.internet.avatar()}/>
+                                <Link to={'/users/user/' + rowData.userId}>
+                                    <Image avatar size='mini' src={'data:image/png;base64,' + rowData.avatar || defaultAvatar}/>
                                 </Link>
                             )
                         },
-                        {title: 'Name', field: 'name'},
-                        {title: 'Surname', field: 'surname'},
-                        {title: 'Birth Year', field: 'birthYear', type: 'numeric'},
+                        {title: 'Name', field: 'fio'},
+                        {title: 'Country, Town', render: rowData => {return [rowData.country, rowData.city].join(', ')}},
                         {
-                            title: 'Birth Place',
-                            field: 'birthCity',
-                            lookup: {34: 'İstanbul', 63: 'Şanlıurfa'},
+                            title: 'Orders Count',
+                            render: rowData => {return rowData.ownedOrders.length}
                         },
                     ]
                     }
