@@ -17,7 +17,7 @@ export default class User extends React.Component {
     }
 
     componentDidMount() {
-        fetch(`/users/user/` + this.props.match.params.userId)
+        fetch('https://lighthouse-back-dev.herokuapp.com' + `/users/user/` + this.props.match.params.userId)
             .then(results => {
                 if (results.status === 200) {
                     return results.json();

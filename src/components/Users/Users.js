@@ -10,7 +10,7 @@ export default class Users extends React.Component {
     state = {users: [], isLoading: true, tableHeight: window.innerHeight - 247};
 
     componentDidMount() {
-        fetch('/users')
+        fetch('https://lighthouse-back-dev.herokuapp.com' + '/users')
             .then(results => results.json())
             .then(data => {
                 this.setState({users: data, isLoading: false});

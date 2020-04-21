@@ -17,7 +17,7 @@ export default class Order extends React.Component {
     }
 
     componentDidMount() {
-        fetch(`/orders/order/` + this.props.match.params.orderId)
+        fetch('https://lighthouse-back-dev.herokuapp.com' + `/orders/order/` + this.props.match.params.orderId)
             .then(results => results.json())
             .then(data => {
                 this.setState({

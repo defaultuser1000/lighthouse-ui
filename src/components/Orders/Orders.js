@@ -94,7 +94,7 @@ class Orders extends React.Component {
     }
 
     async componentDidMount() {
-        await fetch('/orders')
+        await fetch('https://lighthouse-back-dev.herokuapp.com' + '/orders')
             .then(results => results.json())
             .then(data => {
                 this.setState({orders: data, isLoading: false});
@@ -102,7 +102,7 @@ class Orders extends React.Component {
                 console.log(err);
                 this.setState({isLoading: false})
             });
-        await fetch('/users')
+        await fetch('https://lighthouse-back-dev.herokuapp.com' + '/users')
             .then(results => results.json())
             .then(data => {
                 this.setState({
@@ -148,7 +148,7 @@ class Orders extends React.Component {
         event.preventDefault();
         const order = this.state.order;
 
-        await fetch('/orders', {
+        await fetch('https://lighthouse-back-dev.herokuapp.com' + '/orders', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -160,7 +160,7 @@ class Orders extends React.Component {
     }
 
     async fetchUsers(event) {
-        await fetch(config.url.API_URL + "/users")
+        await fetch('https://lighthouse-back-dev.herokuapp.com' + "/users")
             .then(results => results.json())
             .then(data => {
                 this.setState({users: data})

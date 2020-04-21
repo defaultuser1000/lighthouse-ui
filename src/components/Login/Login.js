@@ -32,7 +32,7 @@ export default class Login extends React.Component {
 
     loginClicked() {
 
-        fetch(`/users/authenticate`,
+        fetch('https://lighthouse-back-dev.herokuapp.com' + `/users/authenticate`,
             {
                 method: 'GET',
                 headers: {

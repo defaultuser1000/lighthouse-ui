@@ -15,7 +15,7 @@ export default class ProfileDropdown extends React.Component {
             text: 'Sign Out',
             icon: 'sign out',
             onClick: () => {
-                fetch(`/users/logout`)
+                fetch('https://lighthouse-back-dev.herokuapp.com' + `/users/logout`)
                     .then(response => {
                         if (response.status === 204) {
                             AuthenticationService.prototype.logout();
