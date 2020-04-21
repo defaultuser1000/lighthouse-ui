@@ -25,6 +25,7 @@
     "semantic-ui-react": "^0.88.2",
     "tachyons-components": "^1.0.1"
   },
+  "proxy": "https://lighthouse-back-dev.herokuapp.com/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
