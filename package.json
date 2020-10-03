@@ -38,7 +38,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "proxy": "https://lighthouse-back-dev.herokuapp.com",
+  "proxy": "${npm_config_proxy}",
   "browserslist": {
     "production": [
       ">0.2%",
