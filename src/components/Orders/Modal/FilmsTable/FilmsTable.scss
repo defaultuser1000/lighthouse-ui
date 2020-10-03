@@ -1,0 +1,30 @@
+@import "../../../../styles/shared";
+
+.Table {
+  border-spacing: 0;
+  background: #fff;
+  border: 1px solid rgba(34,36,38,.15);
+  border-radius: .28571429rem;
+  width: 100%;
+}
+
+.Films-Table {
+  width: 100%;
+  max-width: 100vw;
+}
+
+.Cell {
+  border-right: 1px solid rgba(34,36,38,.15);
+  border-bottom: 1px solid rgba(34,36,38,.15);
+  padding: 4px;
+  text-align: left;
+  min-height: 2.71428571em;
+}
+
+.Cell:last-child {
+  border-right: 0;
+}
+
+.Table > tbody > tr:last-child > .Cell {
+  border-bottom: 0;
+}

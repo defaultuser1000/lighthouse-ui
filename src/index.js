@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 import 'semantic-ui-css/semantic.min.css';
 import './index.css';
 import App from './App';
@@ -17,7 +17,7 @@ const AlertTemplate = ({ style, options, message, close }) => (
     </div>
 );
 
-ReactDOM.render(
+render(
     <AlertProvider template={AlertTemplate}>
         <BrowserRouter>
             <App/>

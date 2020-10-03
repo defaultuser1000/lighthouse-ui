@@ -13,12 +13,16 @@
     "node-sass": "^4.13.1",
     "react": "^16.12.0",
     "react-alert": "^7.0.0",
+    "react-alert-template-basic": "^1.0.0",
     "react-content-loader": "^5.0.2",
     "react-dom": "^16.12.0",
     "react-fade-in": "^0.1.8",
+    "react-lazyload": "^3.0.0",
+    "react-loader-spinner": "^3.1.14",
     "react-loading": "^2.0.3",
     "react-lottie": "^1.2.3",
     "react-native": "^0.61.5",
+    "react-promise-tracker": "^2.1.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "semantic-ui-css": "^2.4.1",
@@ -34,6 +38,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "proxy": "http://localhost:8080",
   "browserslist": {
     "production": [
       ">0.2%",

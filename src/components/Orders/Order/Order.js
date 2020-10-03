@@ -8,6 +8,8 @@ export default class Order extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            currentUser: props.currentUser,
+            isAdmin: props.isAdmin,
             order: {},
             orderOwner: {},
             orderCreator: {},
@@ -17,7 +19,7 @@ export default class Order extends React.Component {
     }
 
     componentDidMount() {
-        fetch('https://lighthouse-back-dev.herokuapp.com' + `/orders/order/` + this.props.match.params.orderId)
+        fetch(`/orders/order/` + this.props.match.params.orderId)
             .then(results => results.json())
             .then(data => {
                 this.setState({
@@ -73,7 +75,7 @@ export default class Order extends React.Component {
                     <React.Fragment>
                         <Form loading={this.state.isLoading}
                               size={'large'}>
-                            <Form.Group widths={"two"}>
+                            {this.state.isAdmin && <Form.Group widths={"two"}>
                                 <Form.Field
                                     control={Input}
                                     label='Order Owner'
@@ -86,7 +88,7 @@ export default class Order extends React.Component {
                                     value={[this.state.orderCreator.firstname, this.state.orderCreator.lastname].join(' ')}
                                     editable='false'
                                 />
-                            </Form.Group>
+                            </Form.Group>}
                             <Form.Field
                                 control={Input}
                                 label='Scanner'

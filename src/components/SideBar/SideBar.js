@@ -4,6 +4,7 @@ import {Divider, Menu} from 'semantic-ui-react';
 import './SideBar.scss';
 import {SideBarHeader} from "./SideBarHeader/SideBarHeader";
 import {SideBarFooter} from "./SideBarFooter/SideBarFooter";
+import {authenticationService} from "../../_services/authentication.service";
 
 export default class SideBar extends React.Component {
     render() {
@@ -11,8 +12,8 @@ export default class SideBar extends React.Component {
             <Menu borderless vertical stackable fixed='left' className='side-nav'>
                 <SideBarItem path='/' label='Home' icon='home'/>
                 <SideBarItem path='/orders' label='Orders' icon='film'/>
-                <SideBarItem path='/users' label='Users' icon='user outline'/>
-                <SideBarItem path='/schedule' label='Working Schedule' icon='calendar outline'/>
+                {authenticationService.isAdmin && <SideBarItem path='/users' label='Users' icon='user outline'/>}
+                {authenticationService.isAdmin && <SideBarItem path='/schedule' label='Working Schedule' icon='calendar outline'/>}
                 <Divider/>
                 <SideBarHeader title='System'/>
                 <SideBarItem path='/settings' label='Settings' icon='settings'/>

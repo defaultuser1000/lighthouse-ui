@@ -2,7 +2,7 @@ import React from 'react';
 import './User.scss'
 import {Segment, Breadcrumb, Divider, Form, ButtonGroup, Button} from "semantic-ui-react";
 import {Redirect} from "react-router-dom";
-import {AuthenticationService} from "../../../_services/authentication.service";
+import {authenticationService} from "../../../_services/authentication.service";
 
 export default class User extends React.Component {
 
@@ -17,7 +17,7 @@ export default class User extends React.Component {
     }
 
     componentDidMount() {
-        fetch('https://lighthouse-back-dev.herokuapp.com' + `/users/user/` + this.props.match.params.userId)
+        fetch(`/admin/users/user/` + this.props.match.params.userId)
             .then(results => {
                 if (results.status === 200) {
                     return results.json();
@@ -31,9 +31,9 @@ export default class User extends React.Component {
                     isLoading: false
                 });
             }).catch(err => {
-                AuthenticationService.prototype.logout();
+                authenticationService.logout();
                 return (<Redirect to="/login"/>);
-        })
+            });
     }
 
     render() {
@@ -53,7 +53,7 @@ export default class User extends React.Component {
                         <ButtonGroup>
                             <Button loading={this.state.isLoading} icon='refresh' onClick={() => {
                                 window.location.reload()
-                            }}></Button>
+                            }}/>
                         </ButtonGroup>
                     </React.Fragment>
                     <Divider/>

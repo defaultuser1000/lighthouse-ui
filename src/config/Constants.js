@@ -27,3 +27,16 @@ export const config = process.env.STAND === "production" ? prod
     : process.env.STAND === "development" ? dev
         : process.env.STAND === "staging" ? staging
             : local;
+
+export const statusColor = new Map([
+        ['new', 'blue'],
+        ['cancelled', 'red'],
+        ['confirmed', 'teal'],
+        ['sent', 'purple'],
+        ['arrived', 'yellow'],
+        ['developed', 'olive'],
+        ['scanned', 'orange'],
+        ['processed', 'purple'],
+        ['ready', 'green']
+    ]
+);

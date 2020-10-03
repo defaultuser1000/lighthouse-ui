@@ -1,0 +1,10 @@
+@import "../../../styles/shared";
+
+.your-grid-container {
+  display: grid;
+  background-color: #D84F47;
+}
+
+.your-image-container {
+  height : 200px; // bingoooo, now  grid container can calculate correctly
+}

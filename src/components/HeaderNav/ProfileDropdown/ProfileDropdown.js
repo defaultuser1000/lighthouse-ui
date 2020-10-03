@@ -3,7 +3,7 @@ import './ProfileDropdown.scss';
 import defaultAvatar from '../../../assets/images/default_avatar.png';
 
 import {Dropdown, Image} from 'semantic-ui-react';
-import {AuthenticationService} from '../../../_services/authentication.service';
+import {authenticationService} from '../../../_services/authentication.service';
 
 export default class ProfileDropdown extends React.Component {
 
@@ -15,10 +15,10 @@ export default class ProfileDropdown extends React.Component {
             text: 'Sign Out',
             icon: 'sign out',
             onClick: () => {
-                fetch('https://lighthouse-back-dev.herokuapp.com' + `/users/logout`)
+                fetch(`/users/logout`)
                     .then(response => {
                         if (response.status === 204) {
-                            AuthenticationService.prototype.logout();
+                            authenticationService.logout();
                         } else {
                             throw new Error(response.statusText);
                         }
@@ -31,12 +31,18 @@ export default class ProfileDropdown extends React.Component {
     ];
 
     render() {
-        let fio = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')).fio || 'Empty FIO result' : '';
-        let avatar = localStorage.getItem('userData') ? 'data:image/png;base64,' + JSON.parse(localStorage.getItem('userData')).avatar || defaultAvatar : defaultAvatar;
+        let userData = JSON.parse(localStorage.getItem('userData'));
+
+        let fio = userData
+            ? userData.myUserDetails.fio || userData.username
+            : '';
+        let avatar = userData
+            ? 'data:image/png;base64,' + userData.myUserDetails.avatar || defaultAvatar
+            : defaultAvatar;
 
         return (
             <Dropdown
-                trigger={<span className='profile'>{fio} <Image avatar size='tiny' src={avatar}/></span>}
+                trigger={<span className='profile'>{fio} <Image avatar circular size='tiny' src={avatar}/></span>}
                 options={this.options}
                 pointing='top right'
                 icon={null}

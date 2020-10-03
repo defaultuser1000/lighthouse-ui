@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {AuthenticationService} from '../../_services/authentication.service';
+import {authenticationService} from '../../_services/authentication.service';
 import {Button, Form, Grid, Header, Message, Segment} from "semantic-ui-react";
 import './Login.scss';
 import {Redirect} from "react-router-dom";
@@ -31,33 +31,11 @@ export default class Login extends React.Component {
     }
 
     loginClicked() {
-
-        fetch('https://lighthouse-back-dev.herokuapp.com' + `/users/authenticate`,
-            {
-                method: 'GET',
-                headers: {
-                    "Authorization": AuthenticationService.prototype
-                        .createBasicAuthToken(this.state.username, this.state.password)
-                }
-            }
-        ).then((response) => {
-            if (response.status === 200) {
-                return response.json();
-            } else {
-                throw new Error(response.statusText);
-            }
-        }).then((data) => {
-            AuthenticationService.prototype.registerSuccessfulLogin(data, data.username);
-            this.forceUpdate();
-        }).catch((error) => {
-            this.setState({showSuccessMessage: false});
-            this.setState({error: error.message, hasLoginFailed: true});
-        });
-
+        this.setState(authenticationService.login(this.state.username, this.state.password));
     }
 
     render() {
-        if (AuthenticationService.prototype.isUserLoggedIn()) {
+        if (authenticationService.currentUserValue) {
             return <Redirect to='/'/>;
         }
 

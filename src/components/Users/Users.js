@@ -4,17 +4,14 @@ import MaterialTable from 'material-table';
 import {Link} from "react-router-dom";
 import {Image} from "semantic-ui-react";
 import defaultAvatar from '../../assets/images/default_avatar.png';
+import {authenticationService} from "../../_services/authentication.service";
 
 export default class Users extends React.Component {
 
     state = {users: [], isLoading: true, tableHeight: window.innerHeight - 247};
 
     componentDidMount() {
-        fetch('https://lighthouse-back-dev.herokuapp.com' + '/users')
-            .then(results => results.json())
-            .then(data => {
-                this.setState({users: data, isLoading: false});
-            }).catch(err => console.log(err))
+
     }
 
     render() {
@@ -30,30 +27,80 @@ export default class Users extends React.Component {
                             field: 'imageUrl',
                             render: rowData => (
                                 <Link to={'/users/user/' + rowData.userId}>
-                                    <Image avatar size='mini' src={'data:image/png;base64,' + rowData.avatar || defaultAvatar}/>
+                                    <Image avatar size='mini'
+                                           src={rowData.myUserDetails !== null
+                                               ? 'data:image/png;base64,' + rowData.myUserDetails.avatar || defaultAvatar
+                                               : defaultAvatar}
+                                    />
                                 </Link>
                             )
                         },
-                        {title: 'Name', field: 'fio'},
-                        {title: 'Country, Town', render: rowData => {return [rowData.country, rowData.city].join(', ')}},
+                        {
+                            title: 'Name',
+                            render: rowData => {
+                                return rowData.myUserDetails !== null
+                                    ?
+                                    <Link to={'/users/user/' + rowData.userId}>{rowData.myUserDetails.fio}</Link>
+                                    : 'EMPTY'
+                            }
+                        },
+                        {
+                            title: 'Country, Town',
+                            render: rowData => {
+                                return rowData.myUserDetails !== null
+                                    ? [rowData.myUserDetails.country, rowData.myUserDetails.city].join(', ') || 'EMPTY'
+                                    : 'EMPTY'
+                            }
+                        },
                         {
                             title: 'Orders Count',
-                            render: rowData => {return rowData.ownedOrders.length}
+                            render: rowData => {
+                                return rowData.ownedOrders.length
+                            }
                         },
                     ]
                     }
-                    data={this.state.users}
+                    data={query =>
+                        new Promise((resolve, reject) => {
+                            let url = '/admin/users?';
+                            url += 'pageSize=' + query.pageSize;
+                            url += '&page=' + query.page;
+
+                            fetch(url)
+                                .then(results => {
+                                    if (results.ok)
+                                        return results.json();
+
+                                    if (results.status === 401) {
+                                        authenticationService.logout();
+                                    }
+                                }).then(data => {
+                                resolve({
+                                    data: data.content,
+                                    page: data.number,
+                                    pageSize: data.size,
+                                    totalCount: data.totalElements
+                                });
+                                this.setState({
+                                    isLoading: false
+                                });
+                            }).catch(err => {
+                                console.log(err);
+                                this.setState({isLoading: false});
+                            });
+                        })
+                    }
                     actions={[
                         {
-                            icon: 'save',
-                            tooltip: 'Save User',
-                            onClick: (event, rowData) => alert("You saved " + rowData.name)
+                            icon: 'edit',
+                            tooltip: 'Edit User',
+                            // onClick: (event, rowData) => alert("You saved " + rowData.myUserDetails.firstName)
                         }
                     ]}
                     options={{
                         actionsColumnIndex: -1,
-                        pageSize: 10,
-                        pageSizeOptions: [10, 25, 50, { value: this.state.users.length, label: 'All' }],
+                        pageSize: 20,
+                        pageSizeOptions: [20],
                         minBodyHeight: this.state.tableHeight,
                         maxBodyHeight: this.state.tableHeight,
                         exportButton: true,
@@ -69,4 +116,4 @@ export default class Users extends React.Component {
             </div>
         );
     }
-}
+};
