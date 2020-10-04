@@ -13,11 +13,8 @@ import { history } from './_helpers/history';
 import Login from "./components/Login/Login";
 import User from "./components/Users/User/User";
 import Profile from "./components/Profile/Profile";
-// import { useAlert } from "react-alert";
 
 export default class App extends Component {
-
-    // alert = useAlert();
 
     constructor(props) {
         super(props);
@@ -56,7 +53,7 @@ export default class App extends Component {
 }
 
 const PrivateRoute = ({component: Component, roles, ...rest}) => (
-    <Route onEnter={authenticationService.checkAuth()} {...rest} render={(props) => {
+    <Route {...rest} render={(props) => {
         const currentUser = authenticationService.currentUserValue;
         if (!currentUser) {
             return <Redirect to={{pathname: '/login', state: { from: props.location } }} />

@@ -11,6 +11,7 @@ export default class Login extends React.Component {
         super(props);
 
         this.state = {
+            authInProgress: false,
             error: '',
             username: '',
             password: '',
@@ -31,7 +32,19 @@ export default class Login extends React.Component {
     }
 
     loginClicked() {
-        this.setState(authenticationService.login(this.state.username, this.state.password));
+        this.setState({ authInProgress: true });
+        authenticationService.login(this.state.username, this.state.password)
+            .then(result => {
+                if (result.hasLoginFailed) {
+                    this.setState({
+                        authInProgress: false,
+                        hasLoginFailed: result.hasLoginFailed,
+                        error: result.error
+                    });
+                } else {
+                    this.setState({ authInProgress: false });
+                }
+            });
     }
 
     render() {
@@ -83,6 +96,8 @@ export default class Login extends React.Component {
                                 color='teal'
                                 size='large'
                                 onClick={this.loginClicked}
+                                loading={this.state.authInProgress}
+                                disabled={this.state.authInProgress}
                             >Login</Button>
                         </Segment>
                     </Form>

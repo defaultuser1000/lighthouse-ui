@@ -3,6 +3,7 @@ import './User.scss'
 import {Segment, Breadcrumb, Divider, Form, ButtonGroup, Button} from "semantic-ui-react";
 import {Redirect} from "react-router-dom";
 import {authenticationService} from "../../../_services/authentication.service";
+import {handleResponse} from "../../../_helpers/handle-response";
 
 export default class User extends React.Component {
 
@@ -18,14 +19,9 @@ export default class User extends React.Component {
 
     componentDidMount() {
         fetch(`/api/admin/users/user/` + this.props.match.params.userId)
-            .then(results => {
-                if (results.status === 200) {
-                    return results.json();
-                } else if (results.status === 401) {
-                    throw new Error(results.status.toString())
-                }
-            })
-            .then(data => {
+            .then(response => {
+                return handleResponse(response);
+            }).then(data => {
                 this.setState({
                     user: data,
                     isLoading: false

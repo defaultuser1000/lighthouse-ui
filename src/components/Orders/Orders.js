@@ -7,6 +7,7 @@ import {withRouter} from "react-router-dom";
 import {authenticationService} from "../../_services/authentication.service";
 import {statusColor} from '../../config/Constants';
 import FilmsTable from "./Modal/FilmsTable/FilmsTable";
+import {handleResponse} from "../../_helpers/handle-response";
 
 class Orders extends React.Component {
 
@@ -152,12 +153,7 @@ class Orders extends React.Component {
 
         fetch('/api/orders/getNewOrderFieldsValues')
             .then(response => {
-                if (response.ok)
-                    return response.json();
-
-                if (response.status === 401) {
-                    authenticationService.logout();
-                }
+                return handleResponse(response);
             }).then(data => {
             let scanners = data['scanners'];
             let scanTypes = data['scanTypes'];
@@ -252,21 +248,26 @@ class Orders extends React.Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(order),
+        }).then(response => {
+            return handleResponse(response);
+        }).then(data => {
+            console.log(data);
+            this.props.history.push('/orders');
         });
-        this.props.history.push('/orders');
     }
 
     async fetchUsers(event) {
         await fetch("/api/users")
-            .then(response => response.json())
-            .then(data => {
+            .then(response => {
+                return handleResponse(response);
+            }).then(data => {
                 this.setState({users: data})
-            })
+            });
     }
 
-    async getOrderPdf(order) {
-        this.setState({isLoading: true});
-        await fetch(`/api/orders/order/` + order.orderId + `/generateReport`, {method: 'GET', responseType: 'blob'})
+    getOrderPdf(order) {
+        this.setState({ isLoading: true });
+        fetch(`/api/orders/order/` + order.orderId + `/generateReport`, {method: 'GET', responseType: 'blob'})
             .then(response => {
                 if (response.ok) {
                     return response.blob().then(blob => {
@@ -275,9 +276,10 @@ class Orders extends React.Component {
                         a.href = url;
                         a.download = 'Order #' + order.orderNumber + ' form.pdf';
                         a.click();
-                        this.setState({isLoading: false});
                     });
                 }
+            }).finally(() => {
+                this.setState({ isLoading: false });
             });
     }
 
@@ -331,12 +333,7 @@ class Orders extends React.Component {
 
                                 fetch(url)
                                     .then(response => {
-                                        if (response.ok)
-                                            return response.json();
-
-                                        if (response.status === 401) {
-                                            authenticationService.logout();
-                                        }
+                                        return handleResponse(response);
                                     }).then(data => {
                                         resolve({
                                             data: data.content,

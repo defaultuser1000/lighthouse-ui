@@ -4,6 +4,7 @@ import defaultAvatar from '../../../assets/images/default_avatar.png';
 
 import {Dropdown, Image} from 'semantic-ui-react';
 import {authenticationService} from '../../../_services/authentication.service';
+import {handleResponse} from "../../../_helpers/handle-response";
 
 export default class ProfileDropdown extends React.Component {
 
@@ -17,13 +18,9 @@ export default class ProfileDropdown extends React.Component {
             onClick: () => {
                 fetch(`/api/users/logout`)
                     .then(response => {
-                        if (response.ok) {
-                            authenticationService.logout();
-                        } else {
-                            throw new Error(response.statusText);
-                        }
-                    })
-                    .catch(error => {
+                        handleResponse(response);
+                        authenticationService.logout();
+                    }).catch(error => {
                         console.log(error);
                     });
             }

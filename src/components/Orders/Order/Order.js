@@ -2,6 +2,7 @@ import React from 'react';
 import './Order.scss'
 import ContentLoader from "react-content-loader"
 import {Segment, Breadcrumb, Divider, Form, Input, TextArea, ButtonGroup, Button} from "semantic-ui-react";
+import {handleResponse} from "../../../_helpers/handle-response";
 
 export default class Order extends React.Component {
 
@@ -20,8 +21,9 @@ export default class Order extends React.Component {
 
     componentDidMount() {
         fetch(`/api/orders/order/` + this.props.match.params.orderId)
-            .then(results => results.json())
-            .then(data => {
+            .then(response => {
+                return handleResponse(response);
+            }).then(data => {
                 this.setState({
                     order: data,
                     orderOwner: data.orderOwner,

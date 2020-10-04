@@ -1,4 +1,5 @@
 import { BehaviorSubject } from 'rxjs';
+import { handleResponse } from "../_helpers/handle-response";
 
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('userData')));
 
@@ -16,25 +17,20 @@ export const authenticationService = {
     }
 };
 
-function login(username, password) {
+async function login(username, password) {
     const requestOptions = {
         method: 'GET',
         headers: {'Authorization': createBasicAuthToken(username, password)}
     };
 
-    return fetch(`/api/users/authenticate`, requestOptions)
+    return await fetch(`/api/users/authenticate`, requestOptions)
         .then((response) => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error(response.statusText);
-            }
+            return handleResponse(response);
         }).then((data) => {
-            registerSuccessfulLogin(data, data.username);
-            this.forceUpdate();
+            registerSuccessfulLogin(data);
+            return data;
         }).catch((error) => {
             return {
-                showSuccessMessage: false,
                 error: error.message,
                 hasLoginFailed: true
             };
@@ -44,28 +40,14 @@ function login(username, password) {
 function checkAuth() {
     fetch(`/api/users/check-auth`, { method: 'GET' })
         .then((response) => {
-            if (response.status === 401 || (
-                    localStorage.getItem('userData')
-                    && sessionStorage.getItem('authenticatedUser')
-                )
-            ) {
-                logout();
-            }
+            return handleResponse(response);
         });
 }
 
 function getDetailedUserProfile() {
     fetch(`/api/users/getUserProfile`, { method: 'GET' })
         .then((response) => {
-            if (response.ok) {
-                if (response.status === 401) {
-                    logout();
-                    return;
-                }
-                return response.json();
-            } else {
-                throw new Error(response.statusText);
-            }
+            return handleResponse(response);
         }).then((data) => {
             localStorage.setItem('detailedProfile', data);
             this.forceUpdate();
@@ -76,7 +58,6 @@ function getDetailedUserProfile() {
 
 function logout() {
     localStorage.removeItem('userData');
-    sessionStorage.removeItem('authenticatedUser');
     currentUserSubject.next(null);
     window.location.href = "/login";
 }
@@ -85,7 +66,8 @@ function createBasicAuthToken(username, password) {
     return 'Basic ' + window.btoa(username + ":" + password)
 }
 
-function registerSuccessfulLogin(localData, sessionData) {
+function registerSuccessfulLogin(localData) {
+    localStorage.removeItem('authAlreadyFailed');
     localStorage.setItem('userData', JSON.stringify(localData));
     currentUserSubject.next(localData);
 }

@@ -5,6 +5,7 @@ import {Link} from "react-router-dom";
 import {Image} from "semantic-ui-react";
 import defaultAvatar from '../../assets/images/default_avatar.png';
 import {authenticationService} from "../../_services/authentication.service";
+import {handleResponse} from "../../_helpers/handle-response";
 
 export default class Users extends React.Component {
 
@@ -70,13 +71,8 @@ export default class Users extends React.Component {
                             url += '&page=' + query.page;
 
                             fetch(url)
-                                .then(results => {
-                                    if (results.ok)
-                                        return results.json();
-
-                                    if (results.status === 401) {
-                                        authenticationService.logout();
-                                    }
+                                .then(response => {
+                                    return handleResponse(response);
                                 }).then(data => {
                                 resolve({
                                     data: data.content,
