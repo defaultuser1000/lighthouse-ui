@@ -28,22 +28,24 @@ export default class ProfileDropdown extends React.Component {
     ];
 
     render() {
-        let userData = JSON.parse(localStorage.getItem('userData'));
+        if (localStorage.getItem('userData')) {
+            let userData = JSON.parse(localStorage.getItem('userData'));
 
-        let fio = userData && userData.myUserDetails !== null
-            ? userData.myUserDetails.fio || userData.username
-            : userData.username;
-        let avatar = userData && userData.myUserDetails !== null
-            ? 'data:image/png;base64,' + userData.myUserDetails.avatar || defaultAvatar
-            : defaultAvatar;
+            let fio = userData !== null && userData.myUserDetails !== null
+                ? userData.myUserDetails.fio
+                : userData.username;
+            let avatar = userData && userData.myUserDetails !== null
+                ? 'data:image/png;base64,' + userData.myUserDetails.avatar || defaultAvatar
+                : defaultAvatar;
 
-        return (
-            <Dropdown
-                trigger={<span className='profile'>{fio} <Image avatar circular size='tiny' src={avatar}/></span>}
-                options={this.options}
-                pointing='top right'
-                icon={null}
-            />
-        );
+            return (
+                <Dropdown
+                    trigger={<span className='profile'>{fio} <Image avatar circular size='tiny' src={avatar}/></span>}
+                    options={this.options}
+                    pointing='top right'
+                    icon={null}
+                />
+            );
+        }
     }
 }
