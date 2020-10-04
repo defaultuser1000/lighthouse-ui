@@ -20,7 +20,7 @@ export default class Order extends React.Component {
     }
 
     componentDidMount() {
-        fetch(`/api/orders/order/` + this.props.match.params.orderId)
+        fetch(`/api/orders/order/` + this.props.match.params.orderId, { credentials: 'include' })
             .then(response => {
                 return handleResponse(response);
             }).then(data => {

@@ -10,12 +10,12 @@ export function handleResponse(response) {
         }
 
         if (!response.ok) {
-            if (response.status === 401) {
+            if (response.status === 401 && data !== 'Bad credentials') {
                 authenticationService.logout();
-            } else {
-                const error = response.statusText + ': ' + data;
-                throw new Error(error);
             }
+
+            const error = response.statusText + ': ' + data;
+            throw new Error(error);
         }
 
         return data;

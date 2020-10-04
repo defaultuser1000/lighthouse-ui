@@ -151,7 +151,7 @@ class Orders extends React.Component {
 
     componentDidMount() {
 
-        fetch('/api/orders/getNewOrderFieldsValues')
+        fetch('/api/orders/getNewOrderFieldsValues', { credentials: 'include' })
             .then(response => {
                 return handleResponse(response);
             }).then(data => {
@@ -243,6 +243,7 @@ class Orders extends React.Component {
 
         await fetch('/orders', {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -257,7 +258,7 @@ class Orders extends React.Component {
     }
 
     async fetchUsers(event) {
-        await fetch("/api/users")
+        await fetch("/api/users", { credentials: 'include' })
             .then(response => {
                 return handleResponse(response);
             }).then(data => {
@@ -267,8 +268,11 @@ class Orders extends React.Component {
 
     getOrderPdf(order) {
         this.setState({ isLoading: true });
-        fetch(`/api/orders/order/` + order.orderId + `/generateReport`, {method: 'GET', responseType: 'blob'})
-            .then(response => {
+        fetch(`/api/orders/order/` + order.orderId + `/generateReport`, {
+            method: 'GET',
+            responseType: 'blob',
+            credentials: 'include'
+        }).then(response => {
                 if (response.ok) {
                     return response.blob().then(blob => {
                         let url = window.URL.createObjectURL(blob);
@@ -331,7 +335,7 @@ class Orders extends React.Component {
                                 url += 'pageSize=' + query.pageSize;
                                 url += '&page=' + query.page;
 
-                                fetch(url)
+                                fetch(url, { credentials: 'include' })
                                     .then(response => {
                                         return handleResponse(response);
                                     }).then(data => {

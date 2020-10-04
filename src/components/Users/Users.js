@@ -70,7 +70,7 @@ export default class Users extends React.Component {
                             url += 'pageSize=' + query.pageSize;
                             url += '&page=' + query.page;
 
-                            fetch(url)
+                            fetch(url, { credentials: 'include' })
                                 .then(response => {
                                     return handleResponse(response);
                                 }).then(data => {

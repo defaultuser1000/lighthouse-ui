@@ -20,6 +20,7 @@ export const authenticationService = {
 async function login(username, password) {
     const requestOptions = {
         method: 'GET',
+        credentials: 'include',
         headers: {'Authorization': createBasicAuthToken(username, password)}
     };
 
@@ -38,15 +39,21 @@ async function login(username, password) {
 }
 
 function checkAuth() {
-    fetch(`/api/users/check-auth`, { method: 'GET' })
-        .then((response) => {
+    fetch(`/api/users/check-auth`,
+        {
+            method: 'GET',
+            credentials: 'include'
+        }).then((response) => {
             return handleResponse(response);
         });
 }
 
 function getDetailedUserProfile() {
-    fetch(`/api/users/getUserProfile`, { method: 'GET' })
-        .then((response) => {
+    fetch(`/api/users/getUserProfile`,
+        {
+            method: 'GET',
+            credentials: 'include'
+        }).then((response) => {
             return handleResponse(response);
         }).then((data) => {
             localStorage.setItem('detailedProfile', data);
