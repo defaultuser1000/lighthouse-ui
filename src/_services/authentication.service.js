@@ -44,9 +44,10 @@ function login(username, password) {
 function checkAuth() {
     fetch(`/api/users/check-auth`, { method: 'GET' })
         .then((response) => {
-            if (response.status === 401
-                && localStorage.getItem('userData')
-                && sessionStorage.getItem('authenticatedUser')
+            if (response.status === 401 || (
+                    localStorage.getItem('userData')
+                    && sessionStorage.getItem('authenticatedUser')
+                )
             ) {
                 logout();
             }
