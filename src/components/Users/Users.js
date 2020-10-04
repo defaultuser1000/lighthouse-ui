@@ -38,10 +38,13 @@ export default class Users extends React.Component {
                         {
                             title: 'Name',
                             render: rowData => {
-                                return rowData.myUserDetails !== null
-                                    ?
-                                    <Link to={'/users/user/' + rowData.userId}>{rowData.myUserDetails.fio}</Link>
-                                    : 'EMPTY'
+                                return <Link to={'/users/user/' + rowData.userId}>
+                                    {
+                                        rowData.myUserDetails !== null
+                                            ? rowData.myUserDetails.fio
+                                            : 'EMPTY'
+                                    }
+                                </Link>
                             }
                         },
                         {
@@ -52,17 +55,17 @@ export default class Users extends React.Component {
                                     : 'EMPTY'
                             }
                         },
-                        {
-                            title: 'Orders Count',
-                            render: rowData => {
-                                return rowData.ownedOrders.length
-                            }
-                        },
+                        // {
+                        //     title: 'Orders Count',
+                        //     render: rowData => {
+                        //         return rowData.ownedOrders.length
+                        //     }
+                        // },
                     ]
                     }
                     data={query =>
                         new Promise((resolve, reject) => {
-                            let url = '/admin/users?';
+                            let url = '/api/admin/users?';
                             url += 'pageSize=' + query.pageSize;
                             url += '&page=' + query.page;
 

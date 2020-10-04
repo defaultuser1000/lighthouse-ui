@@ -17,7 +17,7 @@ export default class ProfileDropdown extends React.Component {
             onClick: () => {
                 fetch(`/api/users/logout`)
                     .then(response => {
-                        if (response.status === 204) {
+                        if (response.ok) {
                             authenticationService.logout();
                         } else {
                             throw new Error(response.statusText);

@@ -150,7 +150,7 @@ class Orders extends React.Component {
 
     componentDidMount() {
 
-        fetch('/orders/getNewOrderFieldsValues')
+        fetch('/api/orders/getNewOrderFieldsValues')
             .then(response => {
                 if (response.ok)
                     return response.json();
@@ -257,7 +257,7 @@ class Orders extends React.Component {
     }
 
     async fetchUsers(event) {
-        await fetch("/users")
+        await fetch("/api/users")
             .then(response => response.json())
             .then(data => {
                 this.setState({users: data})
@@ -325,7 +325,7 @@ class Orders extends React.Component {
                         }}
                         data={query =>
                             new Promise((resolve, reject) => {
-                                let url = '/orders?';
+                                let url = '/api/orders?';
                                 url += 'pageSize=' + query.pageSize;
                                 url += '&page=' + query.page;
 
