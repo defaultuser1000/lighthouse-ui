@@ -33,10 +33,10 @@ export default class ProfileDropdown extends React.Component {
     render() {
         let userData = JSON.parse(localStorage.getItem('userData'));
 
-        let fio = userData
+        let fio = userData && userData.myUserDetails !== null
             ? userData.myUserDetails.fio || userData.username
-            : '';
-        let avatar = userData
+            : userData.username;
+        let avatar = userData && userData.myUserDetails !== null
             ? 'data:image/png;base64,' + userData.myUserDetails.avatar || defaultAvatar
             : defaultAvatar;
 
