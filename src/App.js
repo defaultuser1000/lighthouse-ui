@@ -36,7 +36,7 @@ export default class App extends Component {
     }
 
     render() {
-        authenticationService.checkAuth();
+        // authenticationService.checkAuth();
         return (
             <Switch>
                 <Route exact path="/login" component={() => <Login history={history}/>}/>
@@ -56,7 +56,7 @@ export default class App extends Component {
 }
 
 const PrivateRoute = ({component: Component, roles, ...rest}) => (
-    <Route {...rest} render={(props) => {
+    <Route onEnter={authenticationService.checkAuth()} {...rest} render={(props) => {
         const currentUser = authenticationService.currentUserValue;
         if (!currentUser) {
             return <Redirect to={{pathname: '/login', state: { from: props.location } }} />

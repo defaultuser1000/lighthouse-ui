@@ -1,4 +1,4 @@
-import {BehaviorSubject} from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('userData')));
 
