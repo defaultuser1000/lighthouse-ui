@@ -22,7 +22,7 @@ function login(username, password) {
         headers: {'Authorization': createBasicAuthToken(username, password)}
     };
 
-    return fetch(`/users/authenticate`, requestOptions)
+    return fetch(`/api/users/authenticate`, requestOptions)
         .then((response) => {
             if (response.ok) {
                 return response.json();
@@ -42,7 +42,7 @@ function login(username, password) {
 }
 
 function checkAuth() {
-    fetch(`/users/check-auth`, { method: 'GET' })
+    fetch(`/api/users/check-auth`, { method: 'GET' })
         .then((response) => {
             if (response.status === 401
                 && localStorage.getItem('userData')
@@ -54,7 +54,7 @@ function checkAuth() {
 }
 
 function getDetailedUserProfile() {
-    fetch(`/users/getUserProfile`, { method: 'GET' })
+    fetch(`/api/users/getUserProfile`, { method: 'GET' })
         .then((response) => {
             if (response.ok) {
                 if (response.status === 401) {

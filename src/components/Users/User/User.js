@@ -17,7 +17,7 @@ export default class User extends React.Component {
     }
 
     componentDidMount() {
-        fetch(`/admin/users/user/` + this.props.match.params.userId)
+        fetch(`/api/admin/users/user/` + this.props.match.params.userId)
             .then(results => {
                 if (results.status === 200) {
                     return results.json();

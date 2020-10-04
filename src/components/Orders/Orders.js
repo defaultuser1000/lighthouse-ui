@@ -266,7 +266,7 @@ class Orders extends React.Component {
 
     async getOrderPdf(order) {
         this.setState({isLoading: true});
-        await fetch(`/orders/order/` + order.orderId + `/generateReport`, {method: 'GET', responseType: 'blob'})
+        await fetch(`/api/orders/order/` + order.orderId + `/generateReport`, {method: 'GET', responseType: 'blob'})
             .then(response => {
                 if (response.ok) {
                     return response.blob().then(blob => {
