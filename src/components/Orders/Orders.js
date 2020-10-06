@@ -241,7 +241,7 @@ class Orders extends React.Component {
         event.preventDefault();
         const order = this.state.order;
 
-        await fetch('/orders', {
+        await fetch('/api/orders', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -254,6 +254,8 @@ class Orders extends React.Component {
         }).then(data => {
             console.log(data);
             this.props.history.push('/orders');
+        }).catch(error => {
+            console.error(error);
         });
     }
 
