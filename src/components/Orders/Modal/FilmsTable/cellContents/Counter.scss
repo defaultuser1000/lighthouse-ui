@@ -1,0 +1,18 @@
+@import "../../../../../styles/shared";
+
+.counter > .value {
+  padding-top: 15px !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  max-width: 15px !important;
+}
+
+.counter > .value > .valueField > input {
+  border-width: 0 !important;
+  padding: 0 !important;
+}
+
+.counter > .button {
+  //max-width: 65px !important;
+}
+

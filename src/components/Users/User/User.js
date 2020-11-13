@@ -18,7 +18,7 @@ export default class User extends React.Component {
     }
 
     componentDidMount() {
-        fetch(`/api/admin/users/user/` + this.props.match.params.userId, { credentials: 'include' })
+        fetch(`/api/admin/users/user/` + this.props.match.params.userId)
             .then(response => {
                 return handleResponse(response);
             }).then(data => {

@@ -1,0 +1,59 @@
+@import "../../../../styles/shared";
+
+.filemanager-header {
+  margin: 15px !important;
+  height: 40px;
+  display: flex;
+}
+
+.path {
+  display: inline-block;
+}
+
+.files-count {
+  border-left: 0 !important;
+  padding: 10px 0 10px 10px !important;
+  font-family: 'Roboto', serif !important;
+  font-size: 20px !important;
+}
+
+.buttons-group {
+  margin: 15px;
+}
+
+.buttons-group .button:not(:first-child) {
+  margin-left: 10px;
+}
+
+.gallery {
+  margin: 0 auto;
+  max-width: none;
+  min-height: 750px;
+}
+
+.gallery.horizontal {
+  max-width: none;
+  white-space: nowrap;
+}
+
+.gallery.with-overflow {
+  max-height: 750px;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gallery.horizontal.with-overflow {
+  max-height: none;
+  max-width: none;
+  overflow-x: scroll;
+  overflow-y: auto;
+}
+
+.gallery .gallery-img-wrapper {
+  float: left;
+  margin: 10px;
+}
+
+.dimmed.dimmable > .ui.modals.dimmer.visible {
+  display: flex !important;
+}

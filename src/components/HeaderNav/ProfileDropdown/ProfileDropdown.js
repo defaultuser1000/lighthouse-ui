@@ -16,7 +16,7 @@ export default class ProfileDropdown extends React.Component {
             text: 'Sign Out',
             icon: 'sign out',
             onClick: () => {
-                fetch(`/api/users/logout`, { credentials: 'include' })
+                fetch(`/api/users/logout`)
                     .then(response => {
                         handleResponse(response);
                         authenticationService.logout();

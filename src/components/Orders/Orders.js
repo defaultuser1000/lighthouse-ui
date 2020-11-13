@@ -2,7 +2,7 @@ import React from 'react';
 import './Orders.scss';
 import '../../styles/shared.scss'
 import MaterialTable from "material-table";
-import {Checkbox, Form, Header, Label, Modal, Select, Table, TextArea} from "semantic-ui-react";
+import {Checkbox, Form, Input, Label, Modal, Select, TextArea} from "semantic-ui-react";
 import {withRouter} from "react-router-dom";
 import {authenticationService} from "../../_services/authentication.service";
 import {statusColor} from '../../config/Constants';
@@ -12,6 +12,7 @@ import {handleResponse} from "../../_helpers/handle-response";
 class Orders extends React.Component {
 
     state = {
+        userAddress: '',
         page: 0,
         pageSize: 20,
         totalCount: 0,
@@ -20,34 +21,47 @@ class Orders extends React.Component {
         tableHeight: window.innerHeight - 247,
         showModalNewOrder: false,
         order: {
-            scanner: '',
-            scanType: '',
-            scanSize: '',
+            scanner: {
+                name: ''
+            },
+            orderType: {
+                name: ''
+            },
+            scanSize: {
+                size: ''
+            },
+            orderFilms: [],
             special: '',
             colorTones: '',
             contrast: '',
             density: '',
             frame: '',
             pack: '',
-            express: ''
+            express: '',
+            afterOrderProcessed: '',
+            transportCompany: {
+                name: ''
+            },
+            address: ''
         },
         users: [],
         scannerOptions: {},
+        transportCompanyOptions: [],
         orderOptions: {
             colorTones: [
-                {key: 'c', text: 'Cold', value: 'cold'},
-                {key: 'n', text: 'Neutral', value: 'neutral'},
-                {key: 'w', text: 'Warm', value: 'warm'}
+                {key: 'c', text: 'Cold', value: 'Cold'},
+                {key: 'n', text: 'Neutral', value: 'Neutral'},
+                {key: 'w', text: 'Warm', value: 'Warm'}
             ],
             contrast: [
-                {key: 'l', text: 'Low', value: 'low'},
-                {key: 'n', text: 'Neutral', value: 'neutral'},
-                {key: 'h', text: 'High', value: 'high'}
+                {key: 'l', text: 'Low', value: 'Low'},
+                {key: 'n', text: 'Neutral', value: 'Neutral'},
+                {key: 'h', text: 'High', value: 'High'}
             ],
             density: [
-                {key: 'l', text: 'Low', value: 'low'},
-                {key: 'n', text: 'Neutral', value: 'neutral'},
-                {key: 'h', text: 'High', value: 'high'}
+                {key: 'l', text: 'Low', value: 'Low'},
+                {key: 'n', text: 'Neutral', value: 'Neutral'},
+                {key: 'h', text: 'High', value: 'High'}
             ],
             frame: [
                 {key: 'y', text: 'Yes', value: 'true'},
@@ -56,6 +70,11 @@ class Orders extends React.Component {
             package: [
                 {key: 'c', text: 'Cut slive', value: 'Cut slive'},
                 {key: 'r', text: 'Roll slive', value: 'Roll slive'}
+            ],
+            afterOrderExecution: [
+                {key: 'u', text: 'Could be utilized', value: 'utilize'},
+                {key: 's', text: 'Must be saved and will be picked up within 3 months', value: 'save-self-return'},
+                {key: 'r', text: 'Must send after scanning', value: 'send-after-scan'}
             ]
         }
     };
@@ -142,16 +161,39 @@ class Orders extends React.Component {
 
     constructor(props) {
         super(props);
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleSelectChange = this.handleSelectChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
 
         this.state.isAdmin = authenticationService.isAdmin;
+        let userDetails = authenticationService.currentUserValue.myUserDetails;
+        this.state.userAddress = [userDetails.postalCode, userDetails.country, userDetails.city, userDetails.address]
+            .filter(el => el !== null).join(', ');
     }
 
     componentDidMount() {
 
-        fetch('/api/orders/getNewOrderFieldsValues', { credentials: 'include' })
+        fetch('/api/transportCompanies')
+            .then(response => {
+                return handleResponse(response);
+            })
+            .then(data => {
+                let options = data.map(company => {
+                    const container = {};
+                    const browserLocale = navigator.language.replace('-', '_');
+                    container['key'] = company.companyId;
+                    container['text'] = company.companyNames.filter(name => name.locale === browserLocale)[0].name;
+                    container['value'] = company.code;
+                    return container;
+                });
+
+
+                this.setState({ transportCompanyOptions: options })
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        fetch('/api/orders/getNewOrderFieldsValues')
             .then(response => {
                 return handleResponse(response);
             }).then(data => {
@@ -163,7 +205,7 @@ class Orders extends React.Component {
                 const container = {};
                 container['key'] = scanners.indexOf(scanner);
                 container['text'] = scanner;
-                container['value'] = scanner.toLowerCase();
+                container['value'] = scanner;
                 return container;
             });
             scannersMap.push({key: 'c', text: 'Lab Choice', value: 'any'});
@@ -172,7 +214,7 @@ class Orders extends React.Component {
                 const container = {};
                 container['key'] = scanTypes.indexOf(scanType);
                 container['text'] = scanType;
-                container['value'] = scanType.toLowerCase();
+                container['value'] = scanType;
                 return container;
             });
 
@@ -180,14 +222,14 @@ class Orders extends React.Component {
                 const container = {};
                 container['key'] = scanResolution.indexOf(scanResolutionItem);
                 container['text'] = scanResolutionItem.size;
-                container['value'] = scanResolutionItem.size.toLowerCase();
+                container['value'] = scanResolutionItem.size;
                 container['description'] = scanResolutionItem.description ? scanResolutionItem.description : '';
                 return container;
             });
 
             let scannerOptions = {
                 scanners: scannersMap,
-                scanTypes: scanTypesMap,
+                orderTypes: scanTypesMap,
                 scanResolution: scanResolutionMap
             };
 
@@ -196,71 +238,80 @@ class Orders extends React.Component {
                     scannerOptions: scannerOptions
                 });
         }).catch(err => {
-            console.log(err);
+            console.error(err);
         });
     }
 
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
+    handleChange = (e, { name, value }) => {
+
         let order = {...this.state.order};
-        order[name] = value;
-        this.setState({order: order, showModalNewOrder: true});
-    }
 
-    handleSelectChange(event) {
-        let value = '';
-        let name = '';
-
-        try {
-            value = event.target.innerText;
-            name = event.target.parentElement.parentElement.attributes.name.value;
-        } catch (error) {
-            try {
-                value = event.target.parentElement.getElementsByClassName('text')[0].innerText;
-                name = event.target.parentElement.parentElement.parentElement.attributes.name.value;
-            } catch (e) {
-                return;
+        switch (name) {
+            case "scanner":
+            case "orderType":
+            case "transportCompany":
+                order[name] = {
+                    name: value
+                };
+                break;
+            case "scanSize":
+                order[name] = {
+                    size: value
+                };
+                break;
+            default: {
+                order[name] = value;
+                if (name === 'afterOrderProcessed' && value === 'send-after-scan') {
+                    order.address = this.state.userAddress
+                }
+                if (name === 'afterOrderProcessed' && value !== 'send-after-scan') {
+                    order['transportCompany'] = {
+                        name: ''
+                    };
+                    order['address'] = '';
+                }
+                break;
             }
         }
 
-        let order = {...this.state.order};
-        if (typeof order[name] === 'object') {
-            order[name] = {
-                fio: value,
-                id: event.target.id
-            };
-        } else {
-            order[name] = value;
-        }
-        this.setState({order: order, showModalNewOrder: true});
-    }
+        this.setState({ order: order, showModalNewOrder: true });
+    };
 
-    async handleSubmit(event) {
+    filmAdded = (film) => {
+        let currentOrder = this.state.order;
+        currentOrder.orderFilms.push(film);
+        this.setState({ order: currentOrder });
+    };
+
+    handleSubmit(event) {
         event.preventDefault();
         const order = this.state.order;
 
-        await fetch('/api/orders', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(order),
-        }).then(response => {
-            return handleResponse(response);
-        }).then(data => {
-            console.log(data);
-            this.props.history.push('/orders');
-        }).catch(error => {
-            console.error(error);
-        });
+        if (order.scanner.name !== '' && order.orderType.name !== '' && order.scanSize.size !== ''
+            && order.colorTones !== '' && order.contrast !== '' && order.density !== '' && order.frame !== ''
+            && order.pack !== '' && order.express !== '' && (order.afterOrderProcessed !== ''
+            || (order.afterOrderProcessed === 'send-after-scan' && order.transportCompany.name !== ''))
+        ) {
+            fetch('/api/orders', {
+                method: 'POST',
+                headers: {
+                    // 'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(order),
+            }).then(response => {
+                return handleResponse(response);
+            }).then(data => {
+                console.log(data);
+                this.props.history.push('/orders');
+            }).catch(error => {
+                console.error(error.message);
+            });
+        }
     }
 
     async fetchUsers(event) {
-        await fetch("/api/users", { credentials: 'include' })
+        await fetch("/api/users")
             .then(response => {
                 return handleResponse(response);
             }).then(data => {
@@ -270,7 +321,7 @@ class Orders extends React.Component {
 
     getOrderPdf(order) {
         this.setState({ isLoading: true });
-        fetch(`/api/orders/order/` + order.orderId + `/generateReport`, {
+        fetch(`/api/orders/order/${order.orderId}/generateReport`, {
             method: 'GET',
             responseType: 'blob',
             credentials: 'include'
@@ -337,7 +388,7 @@ class Orders extends React.Component {
                                 url += 'pageSize=' + query.pageSize;
                                 url += '&page=' + query.page;
 
-                                fetch(url, { credentials: 'include' })
+                                fetch(url)
                                     .then(response => {
                                         return handleResponse(response);
                                     }).then(data => {
@@ -359,7 +410,8 @@ class Orders extends React.Component {
                     />
                 </div>
                 <Modal open={this.state.showModalNewOrder} onClose={() => {
-                    this.setState({showModalNewOrder: false})
+                    // TODO: Сделать подтверждение всплывающим окном, если заказ был заполнен
+                    this.setState({ order: {}, showModalNewOrder: false })
                 }}>
                     <Modal.Header>Create New Order</Modal.Header>
                     <Modal.Content>
@@ -372,7 +424,7 @@ class Orders extends React.Component {
                                     options={this.state.users}
                                     value={this.state.order.orderOwner || ''}
                                     placeholder='Order Owner'
-                                    onChange={this.handleSelectChange}
+                                    onChange={this.handleChange}
                                 >
                                 </Form.Field>
                                 <Form.Field
@@ -381,7 +433,7 @@ class Orders extends React.Component {
                                     options={this.state.users}
                                     placeholder='Order Creator'
                                     name='orderCreator'
-                                    onChange={this.handleSelectChange}
+                                    onChange={this.handleChange}
                                 />
                             </Form.Group>}
                             <Form.Group widths={"three"}>
@@ -390,24 +442,27 @@ class Orders extends React.Component {
                                     label='Scanner'
                                     options={this.state.scannerOptions.scanners}
                                     placeholder='Scanner'
+                                    required={true}
                                     name='scanner'
-                                    onChange={this.handleSelectChange}
+                                    onChange={this.handleChange}
                                 />
                                 <Form.Field
                                     control={Select}
-                                    label='Scan Type'
-                                    options={this.state.scannerOptions.scanTypes}
-                                    placeholder='Scan Type'
-                                    name='scanType'
-                                    onChange={this.handleSelectChange}
+                                    label='Order Type'
+                                    options={this.state.scannerOptions.orderTypes}
+                                    placeholder='Order Type'
+                                    required={true}
+                                    name='orderType'
+                                    onChange={this.handleChange}
                                 />
                                 <Form.Field
                                     control={Select}
                                     label='Scan Resolution'
                                     options={this.state.scannerOptions.scanResolution}
                                     placeholder='Scan Resolution'
+                                    required={true}
                                     name='scanSize'
-                                    onChange={this.handleSelectChange}
+                                    onChange={this.handleChange}
                                 />
                             </Form.Group>
                             <Form.Group widths={"three"}>
@@ -416,24 +471,27 @@ class Orders extends React.Component {
                                     label='Color Tones'
                                     options={this.state.orderOptions.colorTones}
                                     placeholder='Color Tones'
+                                    required={true}
                                     name='colorTones'
-                                    onChange={this.handleSelectChange}
+                                    onChange={this.handleChange}
                                 />
                                 <Form.Field
                                     control={Select}
                                     label='Contrast'
                                     options={this.state.orderOptions.contrast}
                                     placeholder='Contrast'
+                                    required={true}
                                     name='contrast'
-                                    onChange={this.handleSelectChange}
+                                    onChange={this.handleChange}
                                 />
                                 <Form.Field
                                     control={Select}
                                     label='Density'
                                     options={this.state.orderOptions.density}
                                     placeholder='Density'
+                                    required={true}
                                     name='density'
-                                    onChange={this.handleSelectChange}
+                                    onChange={this.handleChange}
                                 />
                             </Form.Group>
                             <Form.Group widths={"two"}>
@@ -442,31 +500,68 @@ class Orders extends React.Component {
                                     label='Frame'
                                     options={this.state.orderOptions.frame}
                                     placeholder='Frame'
+                                    required={true}
                                     name='frame'
-                                    onChange={this.handleSelectChange}
+                                    onChange={this.handleChange}
                                 />
                                 <Form.Field
                                     control={Select}
                                     label='Package'
                                     options={this.state.orderOptions.package}
                                     placeholder='Package'
+                                    required={true}
                                     name='pack'
-                                    onChange={this.handleSelectChange}
+                                    onChange={this.handleChange}
                                 />
                             </Form.Group>
-                            <Header>Order Films</Header>
-                            <FilmsTable rows={[]}/>
+                            <Form.Group widths={'equal'}>
+                                <Form.Field
+                                    control={Select}
+                                    label={'After order execution'}
+                                    options={this.state.orderOptions.afterOrderExecution}
+                                    placceholder={'select option'}
+                                    required={true}
+                                    name={'afterOrderProcessed'}
+                                    onChange={this.handleChange}
+                                />
+                                {this.state.order.afterOrderProcessed === 'send-after-scan' &&
+                                <Form.Field
+                                    control={Select}
+                                    label={'Transport Company'}
+                                    options={this.state.transportCompanyOptions}
+                                    placeholder={'Select transport company'}
+                                    required={true}
+                                    name={'transportCompany'}
+                                    onChange={this.handleChange}
+                                />
+                                }
+                            </Form.Group>
+                            {this.state.order.afterOrderProcessed === 'send-after-scan' &&
+                                <Form.Field
+                                    control={Input}
+                                    label={'Address'}
+                                    placeholder={'Enter address where order should be sent'}
+                                    value={this.state.userAddress}
+                                    required={true}
+                                    name={'address'}
+                                    onChange={this.handleChange}
+                                />
+                            }
+                            <Form.Field>
+                                <label>Order Films</label>
+                                <FilmsTable rows={this.state.order.orderFilms} scanResolutions={this.state.scannerOptions.scanResolution} editable={true}/>
+                            </Form.Field>
                             <Form.Field
                                 name='special'
                                 control={TextArea}
                                 label='Special'
-                                onChange={this.handleInputChange}
+                                onChange={this.handleChange}
                             />
                             <Form.Field
                                 control={Checkbox}
                                 label='Express Scanning (+100% cost)'
                                 name='express'
-                                onChange={this.handleInputChange}
+                                onChange={this.handleChange}
                             />
                             <Form.Button type={'submit'}>Save</Form.Button>
                         </Form>

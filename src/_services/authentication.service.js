@@ -20,7 +20,6 @@ export const authenticationService = {
 async function login(username, password) {
     const requestOptions = {
         method: 'GET',
-        credentials: 'include',
         headers: {'Authorization': createBasicAuthToken(username, password)}
     };
 

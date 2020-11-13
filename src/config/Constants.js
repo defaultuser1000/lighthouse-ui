@@ -40,3 +40,5 @@ export const statusColor = new Map([
         ['ready', 'green']
     ]
 );
+
+export const systemColor = '#D84F47';

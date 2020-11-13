@@ -12,13 +12,15 @@
     "http-proxy-middleware": "^1.0.5",
     "material-table": "^1.57.2",
     "node-sass": "^4.13.1",
+    "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-alert": "^7.0.0",
     "react-alert-template-basic": "^1.0.0",
     "react-content-loader": "^5.0.2",
     "react-dom": "^16.12.0",
     "react-fade-in": "^0.1.8",
-    "react-lazyload": "^3.0.0",
+    "react-lazy-load-image-component": "^1.5.0",
+    "react-lazyload": "^3.1.0",
     "react-loader-spinner": "^3.1.14",
     "react-loading": "^2.0.3",
     "react-lottie": "^1.2.3",
@@ -31,9 +33,9 @@
     "tachyons-components": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start --no-cache",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --no-cache",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

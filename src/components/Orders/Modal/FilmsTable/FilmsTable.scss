@@ -17,7 +17,8 @@
   border-right: 1px solid rgba(34,36,38,.15);
   border-bottom: 1px solid rgba(34,36,38,.15);
   padding: 4px;
-  text-align: left;
+  text-align: center;
+  align-content: center;
   min-height: 2.71428571em;
 }
 
@@ -27,4 +28,16 @@
 
 .Table > tbody > tr:last-child > .Cell {
   border-bottom: 0;
+}
+
+.Cell > .filmType {
+  min-width: 5em !important;
+}
+
+.Cell > .processingType {
+  min-width: 5em !important;
+}
+
+.Cell > .resolution {
+  min-width: 10em !important;
 }

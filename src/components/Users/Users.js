@@ -4,7 +4,6 @@ import MaterialTable from 'material-table';
 import {Link} from "react-router-dom";
 import {Image} from "semantic-ui-react";
 import defaultAvatar from '../../assets/images/default_avatar.png';
-import {authenticationService} from "../../_services/authentication.service";
 import {handleResponse} from "../../_helpers/handle-response";
 
 export default class Users extends React.Component {
@@ -70,7 +69,7 @@ export default class Users extends React.Component {
                             url += 'pageSize=' + query.pageSize;
                             url += '&page=' + query.page;
 
-                            fetch(url, { credentials: 'include' })
+                            fetch(url)
                                 .then(response => {
                                     return handleResponse(response);
                                 }).then(data => {

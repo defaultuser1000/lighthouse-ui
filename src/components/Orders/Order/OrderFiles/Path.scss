@@ -1,0 +1,26 @@
+@import "../../../../styles/shared";
+
+.path-container {
+  display: flex;
+}
+
+.path-container .label {
+  display: inline-block;
+  padding: 10px 10px 10px 25px;
+  font-family: 'Roboto', serif;
+  font-size: 18px;
+  color: #ffffff;
+  background-color: #D84F47;
+  border: solid #3a3a3a 1px;
+  border-radius: 20px 0 0 20px;
+}
+
+.path-container .value {
+  display: inline-block;
+  min-width: 150px;
+  padding: 12px 25px 8px 12px;
+  font-family: 'Roboto', serif;
+  font-size: 15px;
+  border: solid #383838 1px;
+  border-radius: 0 20px 20px 0;
+}

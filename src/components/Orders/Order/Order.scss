@@ -14,3 +14,32 @@
 .ui .buttons {
   margin-left: 10px;
 }
+
+.ui.label.status {
+  margin-left: 10px !important;
+}
+
+.ui.horizontal.segments:not(.filemanager-header) {
+  min-height: 900px !important;
+  max-height: 1000px !important;
+}
+
+.order-details-content {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100% !important;
+}
+
+.order-details-scrollable {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.segment.order-files {
+  max-width: 45% !important;
+}
+
+.order-files-header {
+  margin-top: 10px !important;
+  margin-bottom: 18px !important;
+}
