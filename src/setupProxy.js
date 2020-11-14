@@ -6,8 +6,8 @@ module.exports = app => {
         '/api',
         createProxyMiddleware('/api',
             {
-                // target: "https://lighthouse-back-dev.herokuapp.com/",
-                target: "http://localhost:8080/",
+                target: "https://lighthouse-back-dev.herokuapp.com/",
+                // target: "http://localhost:8080/",
                 changeOrigin: true
             })
     );
