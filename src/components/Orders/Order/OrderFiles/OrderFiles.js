@@ -291,7 +291,7 @@ export class OrderFiles extends React.Component {
                         </>
                         }
                         <Button className={'button'} size={'medium'} icon={'download'} content={'Archive'}
-                                disabled={this.state.isDataLoading} onClick={this.archiveAndDownload}/>
+                                disabled={this.state.isDataLoading || this.state.items.length === 0} onClick={this.archiveAndDownload}/>
 
                         {/*<Button className={'button'} size={'medium'} icon={'refresh'}*/}
                         {/*        floated={'right'} disabled={this.state.isDataLoading}*/}
