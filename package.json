@@ -40,8 +40,8 @@
     "tachyons-components": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts --expose-gc --max-old-space-size=4096 start",
-    "build": "react-scripts --expose-gc --max-old-space-size=4096 build",
+    "start": "react-scripts --expose-gc --max_old_space_size=512 start",
+    "build": "react-scripts --expose-gc --max-old-space-size=512 build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
