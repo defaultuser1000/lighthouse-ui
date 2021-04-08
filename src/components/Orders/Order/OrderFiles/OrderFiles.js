@@ -5,7 +5,6 @@ import Path from "./Path";
 import {Button, Image, Modal, ModalContent, ModalHeader, Segment, SegmentGroup} from "semantic-ui-react";
 import ContentsContainer from "./ContentsContainer";
 import {authenticationService} from "../../../../_services/authentication.service";
-import NewFolder from "./NewFolder";
 
 export class OrderFiles extends React.Component {
 
@@ -16,7 +15,6 @@ export class OrderFiles extends React.Component {
         items: [],
         selectedItems: [],
         isDataLoading: true,
-        additionalPath: '',
         orderId: '',
         editing: false,
         showFullSizeImage: false,
@@ -34,9 +32,38 @@ export class OrderFiles extends React.Component {
         key: Math.random()
     };
 
+    createFolder = (event, data, form) => {
+        let folderName = data.children.props.value;
+
+        let sameCount = this.state.items.filter(item => item.itemName === folderName).length;
+
+        if (sameCount > 1) {
+            return;
+        }
+
+        let currentFolderPath = localStorage.getItem('additionalPath')
+            ? (localStorage.getItem('additionalPath') + '/')
+            : '';
+        let fullPath = currentFolderPath + folderName;
+        this.setState({isDataLoading: true});
+        fetch(`/api/orders/order/${this.state.orderId}/createFolder?path=${fullPath}`, {method: 'POST'})
+            .then(response => handleResponse(response))
+            .then(result => {
+                let {items} = this.state;
+                items.filter(item => item.itemName === folderName)[0].new = null;
+                this.setState({items: items});
+            })
+            .catch(error => console.error(error.message))
+            .finally(() => this.setState({isDataLoading: false}));
+    };
+
     uploadFiles = (e) => {
         if (e.target.files.length === 0)
             return;
+
+        let additionalPath = localStorage.getItem('additionalPath')
+            ? localStorage.getItem('additionalPath')
+            : '';
 
         this.setState({isDataLoading: true});
 
@@ -47,8 +74,8 @@ export class OrderFiles extends React.Component {
         }
 
         let url = `/api/orders/order/${this.state.orderId}/uploadPhoto`;
-        if (this.state.additionalPath.length > 0) {
-            url += `?path=${this.state.additionalPath}`;
+        if (additionalPath.length > 0) {
+            url += `?path=${additionalPath.slice(0, -1)}`;
         }
 
         fetch(url, {
@@ -68,13 +95,47 @@ export class OrderFiles extends React.Component {
         });
     };
 
-    editFiles = (e) => {};
+    newFolder = () => {
+        let newFolder = {
+            contentType: 'folder',
+            itemName: 'New folder',
+            new: true
+        };
+        let {items} = this.state;
+
+        let newFolders = items.filter(item => item.itemName.match('New folder.*'));
+        newFolders.sort();
+
+        let maxFolderNumber = 0;
+        for (let i = 0; i < newFolders.length; i++) {
+            let folder = newFolders[i];
+
+            if (folder.itemName.match('.*\\(.*\\).*')) {
+                let number = folder.itemName.match(/\((\d)\)/)[1];
+                if (number && number > maxFolderNumber) {
+                    maxFolderNumber = number;
+                }
+            }
+        }
+        if (maxFolderNumber > 0) {
+            newFolder.itemName += ` (${++maxFolderNumber})`;
+        }
+
+        items.push(newFolder);
+        this.setState({items: items});
+    };
+
+    editFiles = (e) => {
+    };
 
     deleteFiles = () => {
         const filesToDelete = this.state.selectedItems;
+        let additionalPath = localStorage.getItem('additionalPath')
+            ? localStorage.getItem('additionalPath')
+            : '';
 
         let filesUris = filesToDelete.map(file => {
-            return this.state.additionalPath + file.itemName;
+            return additionalPath + file.itemName;
         });
 
         this.setState({isDataLoading: true});
@@ -107,6 +168,10 @@ export class OrderFiles extends React.Component {
 
     selectedItem = (e, value) => {
         const realValue = value.value;
+
+        if (realValue.new) {
+            return;
+        }
 
         if (!this.state.editing) {
             if (realValue.contentType === 'folder') {
@@ -141,11 +206,18 @@ export class OrderFiles extends React.Component {
     }
 
     openFolder(folderName) {
-        let currentAdditionalPath = this.state.additionalPath;
-        currentAdditionalPath += folderName + '/';
+        let currentAdditionalPath = localStorage.getItem('additionalPath')
+            ? localStorage.getItem('additionalPath')
+            : '';
+
+        let paths = currentAdditionalPath.split('/').filter(e => e !== '');
+        paths.push(folderName);
+
+        currentAdditionalPath = paths.join('/');
         this.setState({isDataLoading: true});
-        this.fetchOrderFile(this.state.orderId, currentAdditionalPath);
-        this.setState({additionalPath: currentAdditionalPath});
+        localStorage.setItem('additionalPath', currentAdditionalPath);
+
+        this.fetchOrderFile(this.state.orderId);
     }
 
     openImage(image) {
@@ -156,14 +228,24 @@ export class OrderFiles extends React.Component {
     }
 
     goBack() {
-        let currentAdditionalPath = this.state.additionalPath;
-        let curPathParts = currentAdditionalPath.split('/');
-        curPathParts = curPathParts.splice(curPathParts.length - 1, 1);
+        let currentAdditionalPath = localStorage.getItem('additionalPath')
+            ? localStorage.getItem('additionalPath')
+            : '';
 
-        currentAdditionalPath = curPathParts.length !== 0 && curPathParts[0] === '' ? '' : (curPathParts.join('/') + '/');
+        let curPathParts = currentAdditionalPath
+            .split('/')
+            .filter(path => path !== '');
+        console.log(curPathParts);
+        curPathParts.pop();
+
+        currentAdditionalPath = curPathParts.length !== 0 && curPathParts[0] === ''
+            ? ''
+            : curPathParts.join('/');
+
         this.setState({isDataLoading: true});
-        this.fetchOrderFile(this.state.orderId, currentAdditionalPath);
-        this.setState({additionalPath: currentAdditionalPath});
+        localStorage.setItem("additionalPath", currentAdditionalPath);
+
+        this.fetchOrderFile(this.state.orderId);
     }
 
     compare(a, b) {
@@ -177,9 +259,12 @@ export class OrderFiles extends React.Component {
     }
 
     archiveAndDownload() {
-        let path = this.state.additionalPath;
+        let path = localStorage.getItem('additionalPath')
+            ? localStorage.getItem('additionalPath')
+            : '';
+
         path = path.slice(0, -1);
-        this.setState({ isDataLoading: true });
+        this.setState({isDataLoading: true});
 
         fetch(`/api/orders/order/${this.state.orderId}/downloadPhotos${path.length > 0 ? `?path=${path}` : ''}`, {
             method: 'GET',
@@ -200,15 +285,19 @@ export class OrderFiles extends React.Component {
         }).catch(error => {
             console.error(error.message);
         }).finally(() => {
-            this.setState({ isDataLoading: false });
+            this.setState({isDataLoading: false});
         });
     }
 
-    fetchOrderFile(orderId, additionalPath) {
+    fetchOrderFile(orderId) {
+        let additionalPath = localStorage.getItem('additionalPath')
+            ? localStorage.getItem('additionalPath')
+            : '';
+
         let url = `/api/orders/order/${orderId}/getPhotos` +
             (
                 additionalPath && additionalPath.length > 0
-                    ? `?additionalPath=${additionalPath}`
+                    ? `?additionalPath=${additionalPath}/`
                     : ''
             );
 
@@ -217,42 +306,43 @@ export class OrderFiles extends React.Component {
                 return handleResponse(response);
             })
             .then(data => {
-                this.state.items = data.sort(this.compare).filter((item) => {
+                this.setState({items: data.sort(this.compare).filter((item) => {
                     return item.itemName !== 'thumbnails';
-                });
-                this.state.isDataLoading = false;
-                this.forceUpdate();
+                })});
             })
-            .catch(error => {
-                console.error(error.message);
-            });
+            .catch((error) => {
+                console.error(error);
+                alert("Failed to fetch photos. " + error)
+            })
+            .finally(() => this.setState({isDataLoading: false}));
     }
 
     render() {
+        let additionalPath = localStorage.getItem('additionalPath', '')
+            ? localStorage.getItem('additionalPath')
+            : '';
+
+        let countOfImages = this.state.items.filter(item => item.contentType.match('image/.*')).length;
 
         return (
             <>
-                <SegmentGroup>
+                <SegmentGroup className={'order-files-segment-group'}>
                     <SegmentGroup horizontal className={'filemanager-header'}>
                         <div className={'path'}>
-                            <Path additionalPath={this.state.additionalPath}/>
+                            <Path/>
                         </div>
                         <Segment textAlign={"right"} className={'files-count'}>
-                            <span>Files count: {10}</span>
+                            <span>Files count: {countOfImages}</span>
                         </Segment>
                     </SegmentGroup>
                     <Segment className={'buttons-group'}>
                         <Button className={'button'} size={'medium'} icon={'arrow left'} content={'Back'}
-                                disabled={this.state.isDataLoading || this.state.additionalPath.length === 0}
+                                disabled={this.state.isDataLoading || additionalPath.length === 0}
                                 onClick={this.goBack}/>
                         {authenticationService.isAdmin &&
                         <>
                             <Button className={'button'} size={'medium'} icon={'add'} content={'New folder'}
-                                    disabled={this.state.isDataLoading} onClick={() => {
-                                        // let items = this.state.items;
-                                        // items.push(<NewFolder/>);
-                                        // this.setState({items: items});
-                            }}/>
+                                    disabled={this.state.isDataLoading} onClick={this.newFolder}/>
                             {this.state.editing
                                 ? <Button className={'button'} size={'medium'} icon={'cancel'}
                                           content={'Cancel'}
@@ -291,7 +381,8 @@ export class OrderFiles extends React.Component {
                         </>
                         }
                         <Button className={'button'} size={'medium'} icon={'download'} content={'Archive'}
-                                disabled={this.state.isDataLoading || this.state.items.length === 0} onClick={this.archiveAndDownload}/>
+                                disabled={this.state.isDataLoading || this.state.items.length === 0}
+                                onClick={this.archiveAndDownload}/>
 
                         {/*<Button className={'button'} size={'medium'} icon={'refresh'}*/}
                         {/*        floated={'right'} disabled={this.state.isDataLoading}*/}
@@ -300,6 +391,7 @@ export class OrderFiles extends React.Component {
                     <ContentsContainer key={Math.random()}
                                        items={this.state.items}
                                        isDataLoading={this.state.isDataLoading}
+                                       onFolderCreate={this.createFolder}
                                        onItemSelect={this.selectedItem}
                                        selectedItems={this.state.selectedItems}/>
                 </SegmentGroup>

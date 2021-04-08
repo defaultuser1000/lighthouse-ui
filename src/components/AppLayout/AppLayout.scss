@@ -5,9 +5,23 @@
   overflow: hidden;
   background-color: #fff;
 
-  & > *:not(:first-child) {
-    margin-top: $header-nav-height + 10px;
-    margin-bottom: 10px;
+  & > *:last-child {
+    margin-top: $header-nav-height;
+    margin-bottom: 0;
+    padding-top: 0 !important;
+    padding-left: $sidebar-left-width;
+
+    position: absolute;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+
+    /* Firefox */
+    height: -moz-calc(100% - 107px);
+    /* WebKit */
+    height: -webkit-calc(100% - 107px);
+    /* Standard */
+    height: calc(100% - 107px);
   }
 
 }

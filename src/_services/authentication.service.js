@@ -1,5 +1,5 @@
-import { BehaviorSubject } from 'rxjs';
-import { handleResponse } from "../_helpers/handle-response";
+import {BehaviorSubject} from 'rxjs';
+import {handleResponse} from "../_helpers/handle-response";
 
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('userData')));
 
@@ -13,7 +13,9 @@ export const authenticationService = {
         return currentUserSubject.value
     },
     get isAdmin() {
-        return currentUserSubject.value && currentUserSubject.value.roles.filter(function(role) { return role.name === 'ADMIN'}).length === 1
+        return currentUserSubject.value && currentUserSubject.value.roles.filter(function (role) {
+            return role.name === 'ADMIN'
+        }).length === 1
     }
 };
 
@@ -43,8 +45,8 @@ function checkAuth() {
             method: 'GET',
             credentials: 'include'
         }).then((response) => {
-            return handleResponse(response);
-        });
+        return handleResponse(response);
+    });
 }
 
 function getDetailedUserProfile() {
@@ -53,19 +55,19 @@ function getDetailedUserProfile() {
             method: 'GET',
             credentials: 'include'
         }).then((response) => {
-            return handleResponse(response);
-        }).then((data) => {
-            localStorage.setItem('detailedProfile', data);
-            this.forceUpdate();
-        }).catch((error) => {
-            console.error(error);
-        });
+        return handleResponse(response);
+    }).then((data) => {
+        localStorage.setItem('detailedProfile', data);
+        this.forceUpdate();
+    }).catch((error) => {
+        console.error(error);
+    });
 }
 
 function logout() {
     localStorage.removeItem('userData');
     currentUserSubject.next(null);
-    window.location.href = "/login";
+    window.location.href = "/sign_in";
 }
 
 function createBasicAuthToken(username, password) {

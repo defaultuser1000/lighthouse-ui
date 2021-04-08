@@ -83,7 +83,9 @@ class Orders extends React.Component {
         {
             width: 5,
             title: '#',
-            align: 'left',
+            cellStyle: {
+                textAlign: 'left'
+            },
             field: 'orderNumber',
             render: rowData => (
                 <a href={"/orders/order/" + rowData.orderId}>{rowData.orderNumber}</a>
@@ -92,7 +94,9 @@ class Orders extends React.Component {
         {
             title: 'Client',
             field: 'orderOwner',
-            align: 'left',
+            cellStyle: {
+                textAlign: 'left'
+            },
             render: rowData =>
                 (
                     <a href={"/users/user/" + rowData.orderOwner.userId}
@@ -107,10 +111,11 @@ class Orders extends React.Component {
         },
         {
             title: 'Status',
+            width: 10,
             field: 'orderStatus',
             sorting: false,
             cellStyle: {
-                align: 'center'
+                textAlign: 'center'
             },
             render: rowData =>
                 (
@@ -131,7 +136,9 @@ class Orders extends React.Component {
         {
             width: 5,
             title: '#',
-            align: 'left',
+            cellStyle: {
+                textAlign: 'left'
+            },
             field: 'orderNumber',
             render: rowData => (
                 <a href={"/orders/order/" + rowData.orderId}>{rowData.orderNumber}</a>
@@ -142,7 +149,7 @@ class Orders extends React.Component {
             field: 'orderStatus',
             sorting: false,
             cellStyle: {
-                align: 'center'
+                textAlign: 'center'
             },
             render: rowData =>
                 (
@@ -166,8 +173,14 @@ class Orders extends React.Component {
 
         this.state.isAdmin = authenticationService.isAdmin;
         let userDetails = authenticationService.currentUserValue.myUserDetails;
-        this.state.userAddress = [userDetails.postalCode, userDetails.country, userDetails.city, userDetails.address]
-            .filter(el => el !== null).join(', ');
+        if (userDetails) {
+            this.state.userAddress = [
+                userDetails.postalCode || '',
+                userDetails.country || '',
+                userDetails.city || '',
+                userDetails.address || ''
+            ].filter(el => el !== null).join(', ');
+        }
     }
 
     componentDidMount() {
@@ -295,7 +308,6 @@ class Orders extends React.Component {
             fetch('/api/orders', {
                 method: 'POST',
                 headers: {
-                    // 'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(order),
@@ -398,12 +410,13 @@ class Orders extends React.Component {
                                             pageSize: data.size,
                                             totalCount: data.totalElements
                                         });
-                                        this.setState({
-                                            isLoading: false
-                                        });
                                     }).catch(err => {
                                         console.error(err);
                                         this.setState({isLoading: false});
+                                    }).finally(() => {
+                                        this.setState({
+                                            isLoading: false
+                                        });
                                     });
                             })
                         }

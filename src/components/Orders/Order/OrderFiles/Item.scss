@@ -5,22 +5,29 @@
   box-shadow: none;
 }
 
+.ui > .card {
+  //display: inline-block;
+  float: left;
+  margin: 1em;
+  max-width: 120px;
+  box-shadow: none;
+  padding: 5px;
+}
+
 .ui > .card:not(.selected) {
   border: 0 !important;
-  padding: 5px;
-  box-shadow: none;
-  max-width: 120px;
-  margin: 1em;
-  display: inline-block;
 }
 
 .ui > .card.selected {
   border: 1px #D84F47 solid !important;
-  padding: 5px;
-  box-shadow: none;
-  max-width: 120px;
-  margin: 1em;
-  display: inline-block;
+}
+
+.ui.card:first-child {
+  margin-top: 1em !important;
+}
+
+.ui.card:last-child {
+  margin-bottom: 1em !important;
 }
 
 .ui > .card > .image {
@@ -47,4 +54,9 @@
 
 .card .meta {
   font-size: .8em !important;
+}
+
+.card .new-folder-input>input {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
 }

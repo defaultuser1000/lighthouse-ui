@@ -92,7 +92,7 @@ export default class Users extends React.Component {
                         {
                             icon: 'edit',
                             tooltip: 'Edit User',
-                            // onClick: (event, rowData) => alert("You saved " + rowData.myUserDetails.firstName)
+                            // onClick: (event, rowData) => alert("You saved " + rowData.myUserDetails.name)
                         }
                     ]}
                     options={{

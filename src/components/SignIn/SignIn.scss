@@ -1,0 +1,23 @@
+@import "../../styles/shared";
+
+.login-page-container {
+  margin: 0 !important;
+}
+
+.login-form-container {
+  z-index: 2;
+  background-color: white;
+  clip-path: polygon(
+                  0 0, /* лево верх */
+                  100% 0, /* право верх */
+                  90% 100%, /* право низ */
+                  0 100% /* лево низ */
+  );
+}
+
+.gallery-container {
+  padding: 0 !important;
+  height: 100%;
+  //z-index: -1;
+  background-color: #FFCC00;
+}

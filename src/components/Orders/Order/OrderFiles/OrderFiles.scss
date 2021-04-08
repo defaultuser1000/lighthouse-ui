@@ -1,5 +1,11 @@
 @import "../../../../styles/shared";
 
+.order-files-segment-group {
+  //height: calc(100% - 70px) !important;
+  display: flex;
+  height: calc(100% - 70px) !important;
+}
+
 .filemanager-header {
   margin: 15px !important;
   height: 40px;
@@ -18,42 +24,21 @@
 }
 
 .buttons-group {
-  margin: 15px;
+  padding: 5px !important;
 }
 
-.buttons-group .button:not(:first-child) {
-  margin-left: 10px;
+.buttons-group .button {
+  margin: 5px;
 }
 
 .gallery {
-  margin: 0 auto;
-  max-width: none;
-  min-height: 750px;
-}
-
-.gallery.horizontal {
-  max-width: none;
-  white-space: nowrap;
-}
-
-.gallery.with-overflow {
-  max-height: 750px;
+  padding: 10px !important;
+  height: 100%;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
 
-.gallery.horizontal.with-overflow {
-  max-height: none;
-  max-width: none;
-  overflow-x: scroll;
-  overflow-y: auto;
-}
-
-.gallery .gallery-img-wrapper {
+.gallery .photo-container {
   float: left;
   margin: 10px;
-}
-
-.dimmed.dimmable > .ui.modals.dimmer.visible {
-  display: flex !important;
 }

@@ -3,6 +3,8 @@
 .order {
   margin-left: $sidebar-left-width + 1rem;
   margin-right: 1rem;
+  //max-height: 90%;
+  //margin-bottom: auto;
 }
 
 .myloader {
@@ -19,24 +21,26 @@
   margin-left: 10px !important;
 }
 
-.ui.horizontal.segments:not(.filemanager-header) {
-  min-height: 900px !important;
-  max-height: 1000px !important;
+.order-row {
+  height: 100% !important;
+}
+
+.order-details {
+  overflow-y: hidden;
+  height: 100% !important;
+}
+
+.full-height-segment {
+  overflow-y: unset;
+  flex-grow: unset !important;
+  height: calc(100%) !important;
 }
 
 .order-details-content {
   overflow-y: auto;
-  overflow-x: hidden;
-  height: 100% !important;
-}
-
-.order-details-scrollable {
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.segment.order-files {
-  max-width: 45% !important;
+  overflow-x: auto;
+  padding-bottom: 0 !important;
+  height: calc(100% - 80px) !important;
 }
 
 .order-files-header {

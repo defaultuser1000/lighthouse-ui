@@ -1,0 +1,29 @@
+@import "../../styles/shared";
+
+.sign-up-form-container {
+  padding: 40px 25px 40px 25px !important;
+  border-radius: 10px;
+  -webkit-box-shadow: 0 20px 60px 30px rgba(0, 0, 0, 0.075);
+  box-shadow: 0 0 20px 15px rgba(0, 0, 0, 0.075);
+}
+
+.sign-up-form-container > *:first-child {
+  margin-bottom: 40px;
+}
+
+.sign-up-form > * {
+  margin-bottom: 25px !important;
+}
+
+.sign-up-form .login-group {
+  margin: unset !important;
+  display: unset !important;
+}
+
+.rounded-dropdown {
+  height: 50px !important;
+  border-radius: 25px !important;
+  border: 0.5px #989898 solid !important;
+  text-align: left;
+  vertical-align: center;
+}

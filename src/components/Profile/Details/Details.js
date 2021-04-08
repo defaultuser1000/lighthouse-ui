@@ -14,9 +14,9 @@ class Details extends Component {
             enabled: null,
             myUserDetails: {
                 avatar: null,
-                firstName: null,
-                secondName: null,
-                lastName: null,
+                name: null,
+                patronymic: null,
+                surname: null,
                 birthDay: null,
                 postalCode: null,
                 country: null,

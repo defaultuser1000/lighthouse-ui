@@ -40,7 +40,7 @@ export default class ProfileDropdown extends React.Component {
 
             return (
                 <Dropdown
-                    trigger={<span className='profile'>{fio} <Image avatar circular size='tiny' src={avatar}/></span>}
+                    trigger={<span className='profile'>{fio}  <Image avatar circular size='tiny' src={avatar}/></span>}
                     options={this.options}
                     pointing='top right'
                     icon={null}

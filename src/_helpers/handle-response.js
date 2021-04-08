@@ -1,5 +1,10 @@
 import {authenticationService} from '../_services/authentication.service';
 
+const logoutResponses = [
+    'Bad credentials',
+    'User is disabled'
+];
+
 export function handleResponse(response) {
     return response.text().then(text => {
         let data = "";
@@ -10,11 +15,11 @@ export function handleResponse(response) {
         }
 
         if (!response.ok) {
-            if (response.status === 401 && data !== 'Bad credentials') {
+            if (response.status === 401 && logoutResponses.indexOf(data) === -1) {
                 authenticationService.logout();
             }
 
-            const error = response.statusText + ': ' + data;
+            const error = response.statusText === 'Conflict' ? data : response.statusText + ': ' + JSON.stringify(data);
             throw new Error(error);
         }
 

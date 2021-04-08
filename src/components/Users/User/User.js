@@ -28,7 +28,7 @@ export default class User extends React.Component {
                 });
             }).catch(err => {
                 authenticationService.logout();
-                return (<Redirect to="/login"/>);
+                return (<Redirect to="/sign_in"/>);
             });
     }
 
@@ -63,13 +63,13 @@ export default class User extends React.Component {
                             {/*    <Form.Field*/}
                             {/*        control={Input}*/}
                             {/*        label='Order Owner'*/}
-                            {/*        value={[this.state.orderOwner.firstname, this.state.orderOwner.lastname].join(' ')}*/}
+                            {/*        value={[this.state.orderOwner.name, this.state.orderOwner.surname].join(' ')}*/}
                             {/*        editable='false'*/}
                             {/*    />*/}
                             {/*    <Form.Field*/}
                             {/*        control={Input}*/}
                             {/*        label='Order Creator'*/}
-                            {/*        value={[this.state.orderCreator.firstname, this.state.orderCreator.lastname].join(' ')}*/}
+                            {/*        value={[this.state.orderCreator.name, this.state.orderCreator.surname].join(' ')}*/}
                             {/*        editable='false'*/}
                             {/*    />*/}
                             {/*</Form.Group>*/}

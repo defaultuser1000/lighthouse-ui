@@ -1,0 +1,48 @@
+@import "../../styles/shared";
+
+.login-form-container .logo {
+  margin: auto !important;
+  width: 210px !important;
+}
+
+.login-form {
+  align-items: center;
+}
+
+.login-form > * {
+  margin-bottom: 20px !important;
+}
+
+.login-button {
+  background-color: $system-color !important;
+  color: white !important;
+  border-radius: 15px !important;
+  height: 50px;
+}
+
+.rounded-input > input {
+  height: 50px !important;
+  border-radius: 25px !important;
+  border: 0.5px #989898 solid !important;
+}
+
+.field:not(.error) > .rounded-input > input {
+  border: 0.5px #989898 solid !important;
+}
+
+.field.error > .rounded-input > input {
+  border: 0.5px $system-color solid !important;
+}
+
+.login-form a:any-link {
+  color: $system-color;
+}
+
+#register-link:any-link {
+  color: #555555;
+}
+
+.login-form .register-group {
+  margin: unset !important;
+  display: unset !important;
+}

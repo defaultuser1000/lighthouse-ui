@@ -1,5 +1,4 @@
 import React from 'react';
-import './Home.scss';
 import {Header, Segment} from "semantic-ui-react";
 
 export class Home extends React.Component {
