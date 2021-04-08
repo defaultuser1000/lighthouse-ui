@@ -1,6 +1,9 @@
 {
-  "name": "ui",
+  "name": "lighthouse-film-lab",
   "version": "0.1.0",
+  "engines": {
+    "node": "12.x"
+  },
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.9.3",
@@ -41,7 +44,7 @@
   },
   "scripts": {
     "start": "react-scripts --expose-gc --max_old_space_size=512 start",
-    "build": "react-scripts --expose-gc --max-old-space-size=512 build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
